@@ -1,9 +1,9 @@
 /*
- *        lprobe - a Netflow v5/v9/IPFIX probe for IPv4/v6
+ *        nProbe - a Netflow v5/v9/IPFIX probe for IPv4/v6
  *
- *       Copyright (C) 2007-14 Luca Deri <deri@ltop.org>
+ *       Copyright (C) 2007-14 Luca Deri <deri@ntop.org>
  *
- *                     http://www.ltop.org/
+ *                     http://www.ntop.org/
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "lprobe.h"
+#include "nprobe.h"
 
 #define DEBUG_FLOWS
 //#define CISCO_DEBUG
@@ -440,7 +440,7 @@ void dissectNetFlow(u_int32_t netflow_device_ip,
 #endif
 
   /*
-    Convert V7 flows into V5 flows in order to make ltop
+    Convert V7 flows into V5 flows in order to make ntop
     able to handle V7 flows.
 
     Courtesy of Bernd Ziller <bziller@ba-stuttgart.de>
@@ -503,7 +503,7 @@ void dissectNetFlow(u_int32_t netflow_device_ip,
 	  - tcp_flags
 
 	  In this case we add a patch for filling some of the fields
-	  in order to let ltop digest this flow.
+	  in order to let ntop digest this flow.
 	*/
 
 	the5Record.flowRecord[i].srcaddr   = the1Record.flowRecord[i].srcaddr;
@@ -741,7 +741,7 @@ void dissectNetFlow(u_int32_t netflow_device_ip,
 
 		  fields[fieldId].fieldId = htons(set->templateId);
 		  fields[fieldId].fieldLen = htons(set->flowsetLen);
-		  fields[fieldId].isPenField = (fields[fieldId].fieldId >= ltop_BASE_ID) ? 1 : 0;
+		  fields[fieldId].isPenField = (fields[fieldId].fieldId >= NTOP_BASE_ID) ? 1 : 0;
 		  len += 4; /* Field Type (2) + Field Length (2) */
 		  accumulatedLen +=  fields[fieldId].fieldLen;
 
@@ -1118,7 +1118,7 @@ void dissectNetFlow(u_int32_t netflow_device_ip,
 		      record.rcvdOctets = getField3264to32(&fields[fieldId], &buffer[displ], 1);
 		      if(flowVersion == 9) {
 			/* In ASA We don't have the number of packets so in order
-			   to let ltop not discard this flow we need to put a reasonable
+			   to let ntop not discard this flow we need to put a reasonable
 			   value there (avg 512 bytes packet)
 			*/
 			record.rcvdPkts = htonl(1 + (ntohl(record.rcvdOctets)/512));
@@ -1198,7 +1198,7 @@ void dissectNetFlow(u_int32_t netflow_device_ip,
 
 		    case 278: /* ConnectionCountNew */
 		    case 279: /* ConnectionSumDuration */
-		      /* Not interesting for lprobe */
+		      /* Not interesting for nProbe */
 		      break;
 
 		    case 302:
@@ -1276,29 +1276,29 @@ void dissectNetFlow(u_int32_t netflow_device_ip,
 		  } else {
 		    /* PEN fields */
 		    switch(fields[fieldId].fieldId) {
-		    case ltop_BASE_ID+82: /* NW_LATENCY_SEC */
+		    case NTOP_BASE_ID+82: /* NW_LATENCY_SEC */
 		      memcpy(&record.nw_latency_sec, &buffer[displ], 4);
 		      break;
-		    case ltop_BASE_ID+83: /* NW_LATENCY_USEC */
+		    case NTOP_BASE_ID+83: /* NW_LATENCY_USEC */
 		      memcpy(&record.nw_latency_usec, &buffer[displ], 4);
 		      break;
 
 		      /* VoIP Extensions */
-		    case ltop_BASE_ID+130: /* SIP_CALL_ID */
+		    case NTOP_BASE_ID+130: /* SIP_CALL_ID */
 		      memcpy(&record.sip_call_id, &buffer[displ], 50);
 #ifdef DEBUG_FLOWS
 		      if(readOnlyGlobals.enable_debug)
 			traceEvent(TRACE_INFO, "SIP: sip_call_id=%s", record.sip_call_id);
 #endif
 		      break;
-		    case ltop_BASE_ID+131: /* SIP_CALLING_PARTY */
+		    case NTOP_BASE_ID+131: /* SIP_CALLING_PARTY */
 		      memcpy(&record.sip_calling_party, &buffer[displ], 50);
 #ifdef DEBUG_FLOWS
 		      if(readOnlyGlobals.enable_debug)
 			traceEvent(TRACE_INFO, "SIP: sip_calling_party=%s", record.sip_calling_party);
 #endif
 		      break;
-		    case ltop_BASE_ID+132: /* SIP_CALLED_PARTY */
+		    case NTOP_BASE_ID+132: /* SIP_CALLED_PARTY */
 		      memcpy(&record.sip_called_party, &buffer[displ], 50);
 #ifdef DEBUG_FLOWS
 		      if(readOnlyGlobals.enable_debug)
@@ -1409,7 +1409,7 @@ void dissectNetFlow(u_int32_t netflow_device_ip,
 				 &pkthdr, record.packet, 1 /* RX packet */,
 				 1 /* sampledPacket */, (multiplier == 0) ? 1 : multiplier,
 				 ntohs(record.input), ntohs(record.output),
-				 ntohl(netflow_device_ip), 0); /* Pass the packet to lprobe */
+				 ntohl(netflow_device_ip), 0); /* Pass the packet to nProbe */
 
 		    tot_len += accum_len;
 		  } else {

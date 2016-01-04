@@ -4,9 +4,9 @@ Version: @N2DISK_PACKAGE_VERSION@
 Release: %{buildnumber}
 License: Proprietary
 Group: Networking/Utilities
-URL: http://www.ltop.org/
+URL: http://www.ntop.org/
 Source: n2disk-%{version}.tgz
-Packager: Luca Deri <deri@ltop.org>
+Packager: Luca Deri <deri@ntop.org>
 # Temporary location where the RPM will be built
 BuildRoot:  %{_tmppath}/%{name}-%{version}-root
 Requires: pfring = @PFRING_VERSION@-@PFRING_SVN_RELEASE@ numactl
@@ -49,12 +49,12 @@ cp private/findPacketsWithIndex private/findPacketsWithTimeline private/findPack
 strip $RPM_BUILD_ROOT/usr/local/bin/*
 cp $HOME/nBox/doc/n2disk-UsersGuide.pdf $RPM_BUILD_ROOT/usr/local/share/n2disk
 cp private/n2disk.8 $RPM_BUILD_ROOT/usr/local/man/man8
-cp $HOME/lprobe/packages/etc/init/n2disk.conf		$RPM_BUILD_ROOT/etc/init
-cp $HOME/lprobe/packages/etc/init/disk2n.conf		$RPM_BUILD_ROOT/etc/init
-cp $HOME/lprobe/packages/etc/init.d/n2disk		$RPM_BUILD_ROOT/etc/init.d
-cp $HOME/lprobe/packages/etc/init.d/disk2n		$RPM_BUILD_ROOT/etc/init.d
-cp $HOME/lprobe/packages/etc/logrotate.d/n2disk	      	$RPM_BUILD_ROOT/etc/logrotate.d
-cp $HOME/lprobe/packages/etc/logrotate.d/disk2n	      	$RPM_BUILD_ROOT/etc/logrotate.d
+cp $HOME/nProbe/packages/etc/init/n2disk.conf		$RPM_BUILD_ROOT/etc/init
+cp $HOME/nProbe/packages/etc/init/disk2n.conf		$RPM_BUILD_ROOT/etc/init
+cp $HOME/nProbe/packages/etc/init.d/n2disk		$RPM_BUILD_ROOT/etc/init.d
+cp $HOME/nProbe/packages/etc/init.d/disk2n		$RPM_BUILD_ROOT/etc/init.d
+cp $HOME/nProbe/packages/etc/logrotate.d/n2disk	      	$RPM_BUILD_ROOT/etc/logrotate.d
+cp $HOME/nProbe/packages/etc/logrotate.d/disk2n	      	$RPM_BUILD_ROOT/etc/logrotate.d
 #
 DST=$RPM_BUILD_ROOT/usr/local/n2disk
 SRC=$RPM_BUILD_DIR/%{name}-%{version}
@@ -99,7 +99,7 @@ chkconfig --add n2disk
 %defattr(-, root, root)
 
 %changelog
-* Tue Jul 31 2012 Luca Deri <deri@ltop.org> 2.0
+* Tue Jul 31 2012 Luca Deri <deri@ntop.org> 2.0
 - Current package version
 
 

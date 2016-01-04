@@ -1,10 +1,10 @@
 #!/bin/sh
 #
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# Run this to generate all the initial makefiles for lprobe
+# Run this to generate all the initial makefiles for nprobe
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 #
-# Copyright (C) 2005-14 Luca Deri     <deri@ltop.org>
+# Copyright (C) 2005-14 Luca Deri     <deri@ntop.org>
 #
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
@@ -13,7 +13,7 @@ TODAY=`date +%y%m%d`
 NOW=`date +%s`
 MAJOR_RELEASE="6"
 MINOR_RELEASE="16"
-AC_INIT="AC_INIT([lprobe],[$MAJOR_RELEASE.$MINOR_RELEASE.$TODAY])"
+AC_INIT="AC_INIT([nprobe],[$MAJOR_RELEASE.$MINOR_RELEASE.$TODAY])"
 
 cat configure.am | sed "s/@AC_INIT@/$AC_INIT/g" | sed "s/@NOW@/$NOW/g" > configure.in
 
@@ -43,13 +43,13 @@ AUTOMAKE=`find_command 'automake-*'`
 version="0.2.1"
 
 echo ""
-echo "Starting lprobe automatic configuration system v$version"
+echo "Starting nProbe automatic configuration system v$version"
 echo ""
 echo "  Please be patient, there is a lot to do..."
 echo ""
 
 # Defaults
-NAME=lprobe
+NAME=nprobe
 LIBTOOL=libtool
 LIBTOOLIZE=libtoolize
 config="y"
@@ -81,7 +81,7 @@ do
   case "$arg" in
   -h | --help)
     cat <<EOF
-This script should help you to configure 'lprobe'
+This script should help you to configure 'nprobe'
 
 Usage: $progname [OPTION]...
 
@@ -246,7 +246,7 @@ case "${libtoolversion}" in
     echo ""
     echo "*******************************************************************"
     echo "*"
-    echo "*ERROR: lprobe requires libtool version 1.4 or newer..."
+    echo "*ERROR: nprobe requires libtool version 1.4 or newer..."
     echo "*"
     echo "* FreeBSD ports 1.3.4 seems to work, so we will let it slide..."
     echo "*"
@@ -259,7 +259,7 @@ case "${libtoolversion}" in
     echo ""
     echo "*******************************************************************"
     echo "*"
-    echo "*ERROR: lprobe requires libtool version 1.4 or newer..."
+    echo "*ERROR: nprobe requires libtool version 1.4 or newer..."
     echo "*"
     echo "*"
     echo "*>>>   Unable to proceed with your request, aborting!"
@@ -279,7 +279,7 @@ case "${automakeversion}" in
         echo ""
     echo "******************************************************************"
     echo "*"
-    echo "*ERROR: lprobe requires automake version 1.6 or newer..."
+    echo "*ERROR: nprobe requires automake version 1.6 or newer..."
     echo "*"
     echo "*>>>   Unable to proceed with your request, aborting!"
     echo "*"
@@ -298,7 +298,7 @@ case "${autoconfversion}" in
     echo ""
     echo "******************************************************************"
     echo "*"
-    echo "*ERROR: lprobe requires autoconf version 2.53 or newer..."
+    echo "*ERROR: nprobe requires autoconf version 2.53 or newer..."
     echo "*"
     echo "*>>>   Unable to proceed with your request, aborting!"
     echo "*"
@@ -309,7 +309,7 @@ case "${autoconfversion}" in
     echo ""
     echo "******************************************************************"
     echo "*"
-    echo "*ERROR: lprobe requires autoconf version 2.53 or newer..."
+    echo "*ERROR: nprobe requires autoconf version 2.53 or newer..."
     echo "*"
     echo "*>>>   Unable to proceed with your request, aborting!"
     echo "*"
@@ -455,7 +455,7 @@ fi
 
 echo "8. Downloading nDPI..."
 
-NDPI_URL=https://svn.ltop.org/svn/ltop/trunk/nDPI/
+NDPI_URL=https://svn.ntop.org/svn/ntop/trunk/nDPI/
 if test -d nDPI; then
     echo "nDPI already available"
 else
@@ -510,7 +510,7 @@ if [ ".${config}" = ".y" ]; then
   fi
 else
   echo "9. Skipping ./configure"
-  echo "Run ./configure and then make to compile lprobe"
+  echo "Run ./configure and then make to compile nprobe"
 fi
 echo ""
 

@@ -1,4 +1,4 @@
-#include "lprobe.h"
+#include "nprobe.h"
 
 #include <windows.h>
 #include <winsock2.h>
@@ -151,10 +151,10 @@ extern "C" {
   // =========================================================
 
   // internal name of the service
-#define SZSERVICENAME        "lprobe"
+#define SZSERVICENAME        "nProbe"
 
   // displayed name of the service
-#define SZSERVICEDISPLAYNAME "lprobe for Win32"
+#define SZSERVICEDISPLAYNAME "nProbe for Win32"
 
   // Service TYPE Permissable values:
   //		SERVICE_AUTO_START
@@ -515,9 +515,9 @@ void installService(char *service_name, int argc, char **argv)
       CloseServiceHandle(schService);
 
       /* ****************************************** */
-      // Set the service name. Courtesy of Yuri Francalacci <yuri@ltop.org>
+      // Set the service name. Courtesy of Yuri Francalacci <yuri@ntop.org>
       sprintf(szParamKey2, "SYSTEM\\CurrentControlSet\\Services\\%s",service_name);
-      snprintf(szDescr, sizeof(szDescr), "lprobe v.%s - NetFlow/IPFIX Probe. http://www.ltop.org/",
+      snprintf(szDescr, sizeof(szDescr), "nProbe v.%s - NetFlow/IPFIX Probe. http://www.ntop.org/",
 	       version);
 
       // Set the file value (where the message resources are located.... in this case, our runfile.)
@@ -647,7 +647,7 @@ void removeService(char *service_name)
 
 /* ********************************************* */
 
-extern int lprobe_main(int argc, char *argv[]);
+extern int nprobe_main(int argc, char *argv[]);
 extern void usage (FILE * fd);
 
 DWORD _dwArgc;
@@ -655,7 +655,7 @@ LPTSTR *_lpszArgv;
 HANDLE  hServerStopEvent = NULL;
 
 
-void* invokelprobe(void* _szAppParameters) {
+void* invokenProbe(void* _szAppParameters) {
   DWORD dwNewArgc, i;
   LPTSTR szAppParameters = (LPTSTR)_szAppParameters;
   LPTSTR *lpszNewArgv = NULL;
@@ -686,7 +686,7 @@ void* invokelprobe(void* _szAppParameters) {
       dwNewArgc--;
     }
 
-  /* Example: C:\ltop\lprobe\Release\lprobe.exe */
+  /* Example: C:\ntop\nprobe\Release\nprobe.exe */
   GetModuleFileName(GetModuleHandle(NULL), readOnlyGlobals.base_installation_path, MAX_PATH);
 
   for(i = strlen(readOnlyGlobals.base_installation_path)-1; i>0; i--)
@@ -695,7 +695,7 @@ void* invokelprobe(void* _szAppParameters) {
       break;
     }
 
-  lprobe_main(dwNewArgc, lpszNewArgv);
+  nprobe_main(dwNewArgc, lpszNewArgv);
   SetEvent(hServerStopEvent); // Signal main thread that we're leaving
   return(NULL);
 }
@@ -705,7 +705,7 @@ void* invokelprobe(void* _szAppParameters) {
 
 VOID ServiceStart (DWORD dwArgc, LPTSTR *lpszArgv)
 {
-  pthread_t lprobeThread;
+  pthread_t nProbeThread;
   TCHAR szAppParameters[8192];
 
   // Let the service control manager know that the service is
@@ -739,20 +739,20 @@ VOID ServiceStart (DWORD dwArgc, LPTSTR *lpszArgv)
     goto cleanup;
   }
 
-  // createThread(&lprobeThread, invokelprobe, NULL);
+  // createThread(&nProbeThread, invokenProbe, NULL);
   // J. R. Duarte: Create an argument string from the argument list
   convertArgListToArgString((LPTSTR)szAppParameters,0, dwArgc, lpszArgv);
   if(NULL == szAppParameters){
     _tprintf(TEXT("Could not create AppParameters string.\n"));
   }
 
-  AddToMessageLog(TEXT("About to start lprobe"));
-  pthread_create(&lprobeThread, NULL, invokelprobe, (void*)strdup(szAppParameters));
-  AddToMessageLog(TEXT("lprobe started"));
+  AddToMessageLog(TEXT("About to start nProbe"));
+  pthread_create(&nProbeThread, NULL, invokenProbe, (void*)strdup(szAppParameters));
+  AddToMessageLog(TEXT("nProbe started"));
 
   // Wait for the stop event to be signalled.
   WaitForSingleObject(hServerStopEvent,INFINITE);
-  AddToMessageLog(TEXT("lprobe terminated"));
+  AddToMessageLog(TEXT("nProbe terminated"));
 
  cleanup:
   if (hServerStopEvent)
@@ -1001,7 +1001,7 @@ void main(int argc, char **argv)
     if(NULL == szAppParameters){
       _tprintf(TEXT("Could not create AppParameters string.\n"));
     }
-    invokelprobe(szAppParameters);
+    invokenProbe(szAppParameters);
     return;
   }
   thisIsAservice = 0;
@@ -1011,7 +1011,7 @@ void main(int argc, char **argv)
   // indicate if the program is to be installed, removed, run as a
   // console application, or to display a usage message.
   if(argc > 1){
-    char *service_name = "lprobe for Win32";
+    char *service_name = "nProbe for Win32";
 
     if(!stricmp(argv[1],"/i")){
       if(argc >2)
@@ -1032,20 +1032,20 @@ void main(int argc, char **argv)
     else{
       if(stricmp(argv[1],"/h")) printf("\nUnrecognized option: %s\n", argv[1]);
       printf("Available options:\n");
-      printf("/i <service name> [lprobe options] - Install lprobe as service\n");
-      printf("/c [lprobe options]                - Run lprobe on a console\n");
+      printf("/i <service name> [nprobe options] - Install nprobe as service\n");
+      printf("/c [nprobe options]                - Run nprobe on a console\n");
       printf("/r <service name>                  - Deinstall the service\n\n");
       printf("Example:\n"
-	     "Install lprobe as a service: 'lprobe /i my_lprobe -i 0 -n 192.168.0.1:2055'\n"
-	     "Remove the lprobe service:   'lprobe /r my_lprobe'\n\n");
+	     "Install nprobe as a service: 'nprobe /i my_nProbe -i 0 -n 192.168.0.1:2055'\n"
+	     "Remove the nprobe service:   'nprobe /r my_nProbe'\n\n");
       printf("Notes:\n"
-	     "1. Type 'lprobe /c -h' to see all options\n"
+	     "1. Type 'nprobe /c -h' to see all options\n"
 	     "1. In order to reinstall a service with new options\n"
 	     "   it is necessary to first remove the service, then add it\n"
 	     "   again with the new options.\n"
 	     "2. Services are started/stopped using the Services\n"
 	     "   control panel item.\n"
-	     "3. You can install the lprobe service multiple times\n"
+	     "3. You can install the nProbe service multiple times\n"
 	     "   as long as you use different service names.\n\n");
     }
     exit(0);
@@ -1056,9 +1056,9 @@ void main(int argc, char **argv)
   // service control manager, in which case StartServiceCtrlDispatcher
   // must be called here. A message will be printed just in case this
   // happens from the console.
-  printf("\nNOTE:\nUnder your version of Windows, lprobe is started as a service.\n");
-  printf("Please open the services control panel to start/stop lprobe,\n");
-  printf("or type lprobe /h to see all the available options.\n");
+  printf("\nNOTE:\nUnder your version of Windows, nprobe is started as a service.\n");
+  printf("Please open the services control panel to start/stop nprobe,\n");
+  printf("or type nprobe /h to see all the available options.\n");
 
   if(!StartServiceCtrlDispatcher(serviceTable)) {
     printf("\n%s\n", SZFAILURE);

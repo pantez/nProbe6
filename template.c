@@ -1,9 +1,9 @@
 /*
- *        lprobe - a Netflow v5/v9/IPFIX probe for IPv4/v6
+ *        nProbe - a Netflow v5/v9/IPFIX probe for IPv4/v6
  *
- *       Copyright (C) 2002-11 Luca Deri <deri@ltop.org>
+ *       Copyright (C) 2002-11 Luca Deri <deri@ntop.org>
  *
- *                     http://www.ltop.org/
+ *                     http://www.ntop.org/
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,10 +20,10 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "lprobe.h"
+#include "nprobe.h"
 
 #ifdef HAVE_TEMPLATE_EXTENSIONS
-#include "../lprobe-utils/extensions/templates.c"
+#include "../nProbe-utils/extensions/templates.c"
 #else
 #ifdef HAVE_TEMPLATE_EXTENSIONS
 #include "templates.c"
@@ -155,79 +155,79 @@ V9V10TemplateElementId ver9_templates[] = {
   { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, STANDARD_ENTERPRISE_ID,  SELECTOR_NAME, STATIC_FIELD_LEN,  2, numeric_format, dump_as_uint,  "SELECTOR_NAME", "<reserved>", "Sampler name" },
 
   /*
-    ltop Extensions
+    ntop Extensions
 
     IMPORTANT
     if you change/add constants here/below make sure
-    you change them into ltop too.
+    you change them into ntop too.
   */
 
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   FRAGMENTS,  STATIC_FIELD_LEN, 2, numeric_format, dump_as_uint,  "FRAGMENTS", "", "Number of fragmented flow packets" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   FRAGMENTS,  STATIC_FIELD_LEN, 2, numeric_format, dump_as_uint,  "FRAGMENTS", "", "Number of fragmented flow packets" },
   /* 81 is available */
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   CLIENT_NW_DELAY_SEC,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "CLIENT_NW_DELAY_SEC", "",  "Network latency client <-> lprobe (sec) [deprecated]" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   CLIENT_NW_DELAY_USEC,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "CLIENT_NW_DELAY_USEC", "", "Network latency client <-> lprobe (residual usec) [deprecated]" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   CLIENT_NW_DELAY_MS,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "CLIENT_NW_DELAY_MS", "", "Network latency client <-> lprobe (msec)" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   CLIENT_NW_DELAY_SEC,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "CLIENT_NW_DELAY_SEC", "",  "Network latency client <-> nprobe (sec) [deprecated]" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   CLIENT_NW_DELAY_USEC,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "CLIENT_NW_DELAY_USEC", "", "Network latency client <-> nprobe (residual usec) [deprecated]" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   CLIENT_NW_DELAY_MS,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "CLIENT_NW_DELAY_MS", "", "Network latency client <-> nprobe (msec)" },
 
 
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   SERVER_NW_DELAY_SEC,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "SERVER_NW_DELAY_SEC", "",  "Network latency lprobe <-> server (sec) [deprecated]" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   SERVER_NW_DELAY_USEC,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "SERVER_NW_DELAY_USEC", "", "Network latency lprobe <-> server (residual usec) [deprecated]" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   SERVER_NW_DELAY_MS,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "SERVER_NW_DELAY_MS", "", "Network latency lprobe <-> server (residual msec)" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   SERVER_NW_DELAY_SEC,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "SERVER_NW_DELAY_SEC", "",  "Network latency nprobe <-> server (sec) [deprecated]" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   SERVER_NW_DELAY_USEC,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "SERVER_NW_DELAY_USEC", "", "Network latency nprobe <-> server (residual usec) [deprecated]" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   SERVER_NW_DELAY_MS,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "SERVER_NW_DELAY_MS", "", "Network latency nprobe <-> server (residual msec)" },
 
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   APPL_LATENCY_SEC,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "APPL_LATENCY_SEC", "", "Application latency (sec) [deprecated]" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   APPL_LATENCY_USEC,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "APPL_LATENCY_USEC", "", "Application latency (residual usec) [deprecated]" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   APPL_LATENCY_MS,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "APPL_LATENCY_MS", "", "Application latency (msec)" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   APPL_LATENCY_SEC,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "APPL_LATENCY_SEC", "", "Application latency (sec) [deprecated]" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   APPL_LATENCY_USEC,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "APPL_LATENCY_USEC", "", "Application latency (residual usec) [deprecated]" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   APPL_LATENCY_MS,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "APPL_LATENCY_MS", "", "Application latency (msec)" },
 
 
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   NUM_PKTS_UP_TO_128_BYTES,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_UP_TO_128_BYTES", "", "# packets whose size <= 128" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   NUM_PKTS_128_TO_256_BYTES,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_128_TO_256_BYTES", "", "# packets whose size > 128 and <= 256" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   NUM_PKTS_256_TO_512_BYTES,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_256_TO_512_BYTES", "", "# packets whose size > 256 and < 512" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   NUM_PKTS_512_TO_1024_BYTES,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_512_TO_1024_BYTES", "", "# packets whose size > 512 and < 1024" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   NUM_PKTS_1024_TO_1514_BYTES,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_1024_TO_1514_BYTES", "", "# packets whose size > 1024 and <= 1514" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   NUM_PKTS_OVER_1514_BYTES,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_OVER_1514_BYTES", "", "# packets whose size > 1514" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   NUM_PKTS_UP_TO_128_BYTES,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_UP_TO_128_BYTES", "", "# packets whose size <= 128" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   NUM_PKTS_128_TO_256_BYTES,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_128_TO_256_BYTES", "", "# packets whose size > 128 and <= 256" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   NUM_PKTS_256_TO_512_BYTES,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_256_TO_512_BYTES", "", "# packets whose size > 256 and < 512" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   NUM_PKTS_512_TO_1024_BYTES,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_512_TO_1024_BYTES", "", "# packets whose size > 512 and < 1024" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   NUM_PKTS_1024_TO_1514_BYTES,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_1024_TO_1514_BYTES", "", "# packets whose size > 1024 and <= 1514" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   NUM_PKTS_OVER_1514_BYTES,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_OVER_1514_BYTES", "", "# packets whose size > 1514" },
 
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   CUMULATIVE_ICMP_TYPE,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "CUMULATIVE_ICMP_TYPE", "", "Cumulative OR of ICMP type packets" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   CUMULATIVE_ICMP_TYPE,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "CUMULATIVE_ICMP_TYPE", "", "Cumulative OR of ICMP type packets" },
 #ifdef HAVE_GEOIP
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   SRC_IP_COUNTRY, STATIC_FIELD_LEN, 2,  ascii_format, dump_as_ascii, "SRC_IP_COUNTRY", "", "Country where the src IP is located" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   SRC_IP_CITY, STATIC_FIELD_LEN, 16, ascii_format, dump_as_ascii, "SRC_IP_CITY", "", "City where the src IP is located" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   DST_IP_COUNTRY, STATIC_FIELD_LEN, 2,  ascii_format, dump_as_ascii, "DST_IP_COUNTRY", "", "Country where the dst IP is located" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   DST_IP_CITY, STATIC_FIELD_LEN, 16, ascii_format, dump_as_ascii, "DST_IP_CITY", "", "City where the dst IP is located" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   SRC_IP_COUNTRY, STATIC_FIELD_LEN, 2,  ascii_format, dump_as_ascii, "SRC_IP_COUNTRY", "", "Country where the src IP is located" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   SRC_IP_CITY, STATIC_FIELD_LEN, 16, ascii_format, dump_as_ascii, "SRC_IP_CITY", "", "City where the src IP is located" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   DST_IP_COUNTRY, STATIC_FIELD_LEN, 2,  ascii_format, dump_as_ascii, "DST_IP_COUNTRY", "", "Country where the dst IP is located" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   DST_IP_CITY, STATIC_FIELD_LEN, 16, ascii_format, dump_as_ascii, "DST_IP_CITY", "", "City where the dst IP is located" },
 #endif
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   FLOW_PROTO_PORT, STATIC_FIELD_LEN, 2, numeric_format, dump_as_uint, "FLOW_PROTO_PORT", "", "L7 port that identifies the flow protocol or 0 if unknown" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   UPSTREAM_TUNNEL_ID, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint, "UPSTREAM_TUNNEL_ID", "", "Upstream tunnel identifier (e.g. GTP TEID) or 0 if unknown" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   FLOW_PROTO_PORT, STATIC_FIELD_LEN, 2, numeric_format, dump_as_uint, "FLOW_PROTO_PORT", "", "L7 port that identifies the flow protocol or 0 if unknown" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   UPSTREAM_TUNNEL_ID, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint, "UPSTREAM_TUNNEL_ID", "", "Upstream tunnel identifier (e.g. GTP TEID) or 0 if unknown" },
 
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   LONGEST_FLOW_PKT, STATIC_FIELD_LEN, 2, numeric_format, dump_as_uint, "LONGEST_FLOW_PKT", "", "Longest packet (bytes) of the flow" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   SHORTEST_FLOW_PKT, STATIC_FIELD_LEN, 2, numeric_format, dump_as_uint, "SHORTEST_FLOW_PKT", "", "Shortest packet (bytes) of the flow" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   RETRANSMITTED_IN_PKTS, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint, "RETRANSMITTED_IN_PKTS", "", "Number of retransmitted TCP flow packets (src->dst)" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   RETRANSMITTED_OUT_PKTS, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint, "RETRANSMITTED_OUT_PKTS", "", "Number of retransmitted TCP flow packets (dst->src)" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   OOORDER_IN_PKTS, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint, "OOORDER_IN_PKTS", "", "Number of out of order TCP flow packets (dst->src)" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   OOORDER_OUT_PKTS, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint, "OOORDER_OUT_PKTS", "", "Number of out of order TCP flow packets (dst->src)" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   LONGEST_FLOW_PKT, STATIC_FIELD_LEN, 2, numeric_format, dump_as_uint, "LONGEST_FLOW_PKT", "", "Longest packet (bytes) of the flow" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   SHORTEST_FLOW_PKT, STATIC_FIELD_LEN, 2, numeric_format, dump_as_uint, "SHORTEST_FLOW_PKT", "", "Shortest packet (bytes) of the flow" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   RETRANSMITTED_IN_PKTS, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint, "RETRANSMITTED_IN_PKTS", "", "Number of retransmitted TCP flow packets (src->dst)" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   RETRANSMITTED_OUT_PKTS, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint, "RETRANSMITTED_OUT_PKTS", "", "Number of retransmitted TCP flow packets (dst->src)" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   OOORDER_IN_PKTS, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint, "OOORDER_IN_PKTS", "", "Number of out of order TCP flow packets (dst->src)" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   OOORDER_OUT_PKTS, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint, "OOORDER_OUT_PKTS", "", "Number of out of order TCP flow packets (dst->src)" },
 
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   UNTUNNELED_PROTOCOL,  STATIC_FIELD_LEN, 1, numeric_format, dump_as_uint,  "UNTUNNELED_PROTOCOL", "", "Untunneled IP protocol byte" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   UNTUNNELED_IPV4_SRC_ADDR,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_ipv4_address,  "UNTUNNELED_IPV4_SRC_ADDR", "", "Untunneled IPv4 source address" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   UNTUNNELED_L4_SRC_PORT,  STATIC_FIELD_LEN, 2, numeric_format, dump_as_uint,  "UNTUNNELED_L4_SRC_PORT", "", "Untunneled IPv4 source port" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   UNTUNNELED_IPV4_DST_ADDR,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_ipv4_address,  "UNTUNNELED_IPV4_DST_ADDR", "", "Untunneled IPv4 destination address" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   UNTUNNELED_L4_DST_PORT,  STATIC_FIELD_LEN, 2, numeric_format, dump_as_uint,  "UNTUNNELED_L4_DST_PORT", "", "Untunneled IPv4 destination port" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   UNTUNNELED_PROTOCOL,  STATIC_FIELD_LEN, 1, numeric_format, dump_as_uint,  "UNTUNNELED_PROTOCOL", "", "Untunneled IP protocol byte" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   UNTUNNELED_IPV4_SRC_ADDR,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_ipv4_address,  "UNTUNNELED_IPV4_SRC_ADDR", "", "Untunneled IPv4 source address" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   UNTUNNELED_L4_SRC_PORT,  STATIC_FIELD_LEN, 2, numeric_format, dump_as_uint,  "UNTUNNELED_L4_SRC_PORT", "", "Untunneled IPv4 source port" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   UNTUNNELED_IPV4_DST_ADDR,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_ipv4_address,  "UNTUNNELED_IPV4_DST_ADDR", "", "Untunneled IPv4 destination address" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   UNTUNNELED_L4_DST_PORT,  STATIC_FIELD_LEN, 2, numeric_format, dump_as_uint,  "UNTUNNELED_L4_DST_PORT", "", "Untunneled IPv4 destination port" },
 
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   L7_PROTO,  STATIC_FIELD_LEN, 2,  numeric_format, dump_as_uint,  "L7_PROTO", "", "Layer 7 protocol (numeric)" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   L7_PROTO_NAME, VARIABLE_FIELD_LEN, PROTO_NAME_LEN, ascii_format,   dump_as_ascii, "L7_PROTO_NAME", "", "Layer 7 protocol name" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   L7_PROTO,  STATIC_FIELD_LEN, 2,  numeric_format, dump_as_uint,  "L7_PROTO", "", "Layer 7 protocol (numeric)" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   L7_PROTO_NAME, VARIABLE_FIELD_LEN, PROTO_NAME_LEN, ascii_format,   dump_as_ascii, "L7_PROTO_NAME", "", "Layer 7 protocol name" },
 
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,  DOWNSTREAM_TUNNEL_ID, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint, "DOWNSTREAM_TUNNEL_ID", "", "Downstream tunnel identifier (e.g. GTP TEID) or 0 if unknown" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,  DOWNSTREAM_TUNNEL_ID, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint, "DOWNSTREAM_TUNNEL_ID", "", "Downstream tunnel identifier (e.g. GTP TEID) or 0 if unknown" },
 
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   FLOW_USER_NAME, VARIABLE_FIELD_LEN, 32, ascii_format, dump_as_ascii, "FLOW_USER_NAME", "", "Flow username of the tunnel (if known)" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   FLOW_SERVER_NAME, VARIABLE_FIELD_LEN, 32, ascii_format, dump_as_ascii, "FLOW_SERVER_NAME", "", "Flow server name (if known)" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   PLUGIN_NAME, VARIABLE_FIELD_LEN, 8, ascii_format, dump_as_ascii, "PLUGIN_NAME", "", "Plugin name used by this flow (if any)" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   NUM_PKTS_TTL_EQ_1,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_EQ_1", "", "# packets with TTL = 1" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   NUM_PKTS_TTL_2_5,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_2_5", "", "# packets with TTL > 1 and TTL <= 5" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   NUM_PKTS_TTL_5_32,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_5_32", "", "# packets with TTL > 5 and TTL <= 32" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   NUM_PKTS_TTL_32_64,   STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_32_64", "", "# packets with TTL > 32 and <= 64 " },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   NUM_PKTS_TTL_64_96,   STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_64_96", "", "# packets with TTL > 64 and <= 96" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   NUM_PKTS_TTL_96_128,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_96_128", "", "# packets with TTL > 96 and <= 128" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   NUM_PKTS_TTL_128_160, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_128_160", "", "# packets with TTL > 128 and <= 160" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   NUM_PKTS_TTL_160_192, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_160_192", "", "# packets with TTL > 160 and <= 192" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   NUM_PKTS_TTL_192_224, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_192_224", "", "# packets with TTL > 192 and <= 224" },
-  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   NUM_PKTS_TTL_224_255, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_224_255", "", "# packets with TTL > 224 and <= 255" },
-  { 0, ONLY_IPV4,      FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   IN_SRC_OSI_SAP, STATIC_FIELD_LEN, 37, ascii_format,  dump_as_ascii, "IN_SRC_OSI_SAP", "", "OSI Source SAP (OSI Traffic Only)" },
-  { 0, ONLY_IPV4,      FLOW_TEMPLATE, SHORT_SNAPLEN, ltop_ENTERPRISE_ID,   OUT_DST_OSI_SAP, STATIC_FIELD_LEN, 37, ascii_format, dump_as_ascii, "OUT_DST_OSI_SAP", "", "OSI Destination SAP (OSI Traffic Only)" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   FLOW_USER_NAME, VARIABLE_FIELD_LEN, 32, ascii_format, dump_as_ascii, "FLOW_USER_NAME", "", "Flow username of the tunnel (if known)" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   FLOW_SERVER_NAME, VARIABLE_FIELD_LEN, 32, ascii_format, dump_as_ascii, "FLOW_SERVER_NAME", "", "Flow server name (if known)" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   PLUGIN_NAME, VARIABLE_FIELD_LEN, 8, ascii_format, dump_as_ascii, "PLUGIN_NAME", "", "Plugin name used by this flow (if any)" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   NUM_PKTS_TTL_EQ_1,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_EQ_1", "", "# packets with TTL = 1" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   NUM_PKTS_TTL_2_5,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_2_5", "", "# packets with TTL > 1 and TTL <= 5" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   NUM_PKTS_TTL_5_32,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_5_32", "", "# packets with TTL > 5 and TTL <= 32" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   NUM_PKTS_TTL_32_64,   STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_32_64", "", "# packets with TTL > 32 and <= 64 " },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   NUM_PKTS_TTL_64_96,   STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_64_96", "", "# packets with TTL > 64 and <= 96" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   NUM_PKTS_TTL_96_128,  STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_96_128", "", "# packets with TTL > 96 and <= 128" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   NUM_PKTS_TTL_128_160, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_128_160", "", "# packets with TTL > 128 and <= 160" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   NUM_PKTS_TTL_160_192, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_160_192", "", "# packets with TTL > 160 and <= 192" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   NUM_PKTS_TTL_192_224, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_192_224", "", "# packets with TTL > 192 and <= 224" },
+  { 0, BOTH_IPV4_IPV6, FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   NUM_PKTS_TTL_224_255, STATIC_FIELD_LEN, 4, numeric_format, dump_as_uint,  "NUM_PKTS_TTL_224_255", "", "# packets with TTL > 224 and <= 255" },
+  { 0, ONLY_IPV4,      FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   IN_SRC_OSI_SAP, STATIC_FIELD_LEN, 37, ascii_format,  dump_as_ascii, "IN_SRC_OSI_SAP", "", "OSI Source SAP (OSI Traffic Only)" },
+  { 0, ONLY_IPV4,      FLOW_TEMPLATE, SHORT_SNAPLEN, NTOP_ENTERPRISE_ID,   OUT_DST_OSI_SAP, STATIC_FIELD_LEN, 37, ascii_format, dump_as_ascii, "OUT_DST_OSI_SAP", "", "OSI Destination SAP (OSI Traffic Only)" },
 
 
   /* That's all folks */
@@ -246,10 +246,10 @@ void printTemplateInfo(V9V10TemplateElementId *templates,
 	  && (templates[j].templateElementLen > 0))
 	 || (show_private_elements && (templates[j].templateElementId >= 0xFF))) {
 
-	if(templates[j].templateElementEnterpriseId == ltop_ENTERPRISE_ID) {
+	if(templates[j].templateElementEnterpriseId == NTOP_ENTERPRISE_ID) {
 	  printf("[NFv9 %3d][IPFIX %5d.%d] %%%-26s\t%s\n",
 		 templates[j].templateElementId,
-		 templates[j].templateElementEnterpriseId, templates[j].templateElementId-ltop_BASE_ID,
+		 templates[j].templateElementEnterpriseId, templates[j].templateElementId-NTOP_BASE_ID,
 		 templates[j].netflowElementName,
 		 templates[j].templateElementDescr);
 	} else {
@@ -460,8 +460,8 @@ static void handleTemplate(V9V10TemplateElementId *theTemplateElement,
 
     if((readOnlyGlobals.netFlowVersion == 10)
        && (theTemplateElement->templateElementEnterpriseId != STANDARD_ENTERPRISE_ID)) {
-      if(theTemplateElement->templateElementEnterpriseId == ltop_ENTERPRISE_ID)
-	t16 -= ltop_BASE_ID; /* Just to make sure we don't mess-up the template */
+      if(theTemplateElement->templateElementEnterpriseId == NTOP_ENTERPRISE_ID)
+	t16 -= NTOP_BASE_ID; /* Just to make sure we don't mess-up the template */
 
       t16 = t16 | 0x8000; /* Enable the PEN bit */
     }
@@ -789,7 +789,7 @@ static void handleTemplate(V9V10TemplateElementId *theTemplateElement,
 
 	  /* ************************************ */
 
-	  /* lprobe Extensions */
+	  /* nProbe Extensions */
 	case FRAGMENTS:
 	  copyInt16(direction == src2dst_direction ? theFlow->ext->flowCounters.sentFragPkts : theFlow->ext->flowCounters.rcvdFragPkts,
 		    outBuffer, outBufferBegin, outBufferMax);

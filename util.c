@@ -1,9 +1,9 @@
 /*
- *        lprobe - a Netflow v5/v9/IPFIX probe for IPv4/v6
+ *        nProbe - a Netflow v5/v9/IPFIX probe for IPv4/v6
  *
- *       Copyright (C) 2002-14 Luca Deri <deri@ltop.org>
+ *       Copyright (C) 2002-14 Luca Deri <deri@ntop.org>
  *
- *                     http://www.ltop.org/
+ *                     http://www.ntop.org/
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "lprobe.h"
+#include "nprobe.h"
 
 #ifdef FREEBSD
 #include <pthread_np.h>
@@ -49,8 +49,8 @@ extern void sqlite_exec_sql(char* sql);
 
 #ifdef HAVE_GEOIP
 #define GEOIP_DIR_LOCAL_TEMPLATE "%s"
-#define GEOIP_DIR_SYSTEM_TEMPLATE PREFIX "/lprobe/%s"
-#define GEOIP_DIR_ltopNG "/usr/local/share/ltopng/httpdocs/geoip/%s"
+#define GEOIP_DIR_SYSTEM_TEMPLATE PREFIX "/nprobe/%s"
+#define GEOIP_DIR_NTOPNG "/usr/local/share/ntopng/httpdocs/geoip/%s"
 #endif
 
 static u_int8_t getIfIdx(struct in_addr *addr, u_int16_t *interface_id);
@@ -102,7 +102,7 @@ void traceEvent(const int eventTraceLevel, const char* file,
 #ifndef WIN32
     if(readOnlyGlobals.useSyslog) {
       if(!readWriteGlobals->syslog_opened) {
-	openlog(readOnlyGlobals.lprobeId, LOG_PID, LOG_DAEMON);
+	openlog(readOnlyGlobals.nprobeId, LOG_PID, LOG_DAEMON);
 	readWriteGlobals->syslog_opened = 1;
       }
 
@@ -298,7 +298,7 @@ void readASs(char *path) {
     if(stat(path, &stats) == 0)
       snprintf(the_path, sizeof(the_path), GEOIP_DIR_LOCAL_TEMPLATE, path);
     else {
-      snprintf(the_path, sizeof(the_path), GEOIP_DIR_ltopNG, path);
+      snprintf(the_path, sizeof(the_path), GEOIP_DIR_NTOPNG, path);
 
       if(stat(path, &stats) != 0)
 	snprintf(the_path, sizeof(the_path), GEOIP_DIR_SYSTEM_TEMPLATE, path);
@@ -334,7 +334,7 @@ void readCities(char *path) {
     if(stat(path, &stats) == 0)
       snprintf(the_path, sizeof(the_path), GEOIP_DIR_LOCAL_TEMPLATE, path);
     else {
-      snprintf(the_path, sizeof(the_path), GEOIP_DIR_ltopNG, path);
+      snprintf(the_path, sizeof(the_path), GEOIP_DIR_NTOPNG, path);
 
       if(stat(path, &stats) != 0)
 	snprintf(the_path, sizeof(the_path), GEOIP_DIR_SYSTEM_TEMPLATE, path);
@@ -1117,7 +1117,7 @@ static u_int printRecordWithTemplate(V9V10TemplateElementId *theTemplateElement,
 
     /* ************************************ */
 
-    /* lprobe Extensions */
+    /* nProbe Extensions */
   case FRAGMENTS:
     i = snprintf(dst, avail_len, "%u",
 		 direction == src2dst_direction ? theFlow->ext->flowCounters.sentFragPkts : theFlow->ext->flowCounters.rcvdFragPkts);
@@ -1486,7 +1486,7 @@ static u_int printRecordWithTemplate(V9V10TemplateElementId *theTemplateElement,
 	case dump_as_epoch:
 	case dump_as_tcp_flags:
 	case dump_as_hex:
-	  val = lprobe_UNKNOWN_VALUE_STR;
+	  val = NPROBE_UNKNOWN_VALUE_STR;
 	  break;
 	case dump_as_ipv4_address:
 	  val = "0.0.0.0";
@@ -1698,7 +1698,7 @@ int signalCondvar(ConditionalVariable *condvarId, int broadcast) {
   return rc;
 }
 
-#undef sleep /* Used by ltop_sleep */
+#undef sleep /* Used by ntop_sleep */
 
 #else /* WIN32 */
 
@@ -1754,7 +1754,7 @@ int signalCondvar(ConditionalVariable *condvarId, int broadcast) {
 
 /* ******************************************* */
 
-unsigned int ltop_sleep(unsigned int secs) {
+unsigned int ntop_sleep(unsigned int secs) {
   unsigned int unsleptTime = secs, rest;
 
 #ifndef WIN32
@@ -2002,7 +2002,7 @@ int parseAddress(char * address, netAddress_t * netaddress) {
   network = ((a & 0xff) << 24) + ((b & 0xff) << 16) + ((c & 0xff) << 8) + (d & 0xff);
   /* Special case the /32 mask - yeah, we could probably do it with some fancy
      u long long stuff, but this is simpler...
-     Burton Strauss <Burton@ltopsupport.com> Jun2002
+     Burton Strauss <Burton@ntopsupport.com> Jun2002
   */
   if(bits == 32) {
     networkMask = 0xffffffff;
@@ -2696,7 +2696,7 @@ void dropPrivileges(void) {
       traceEvent(TRACE_WARNING, "Unable to drop privileges [%s]",
 		 strerror(errno));
     } else
-      traceEvent(TRACE_NORMAL, "lprobe changed user to '%s'",
+      traceEvent(TRACE_NORMAL, "nProbe changed user to '%s'",
 		 readOnlyGlobals.unprivilegedUser);
   } else {
     traceEvent(TRACE_WARNING, "Unable to locate user %s",
@@ -2724,9 +2724,9 @@ char* CollectorAddress2Str(CollectorAddress *collector, char *buf, u_int buf_len
   }
 
   if(collector->isIPv6 == 0)
-    inet_ltop(AF_INET, &collector->u.v4Address.sin_addr, addr, sizeof(addr)), port = collector->u.v4Address.sin_port;
+    inet_ntop(AF_INET, &collector->u.v4Address.sin_addr, addr, sizeof(addr)), port = collector->u.v4Address.sin_port;
   else
-    inet_ltop(AF_INET6, &collector->u.v6Address.sin6_addr, addr, sizeof(addr)), port = collector->u.v6Address.sin6_port;
+    inet_ntop(AF_INET6, &collector->u.v6Address.sin6_addr, addr, sizeof(addr)), port = collector->u.v6Address.sin6_port;
 
   snprintf(buf, buf_len, "%s://%s:%d", transport, addr, ntohs(port));
   return(buf);
@@ -2747,8 +2747,8 @@ static char* LogEventSeverity2Str(LogEventSeverity event_severity) {
 
 static char* LogEventType2Str(LogEventType event_type) {
   switch(event_type) {
-  case probe_started:              return("lprobe_START");
-  case probe_stopped:              return("lprobe_STOP");
+  case probe_started:              return("NPROBE_START");
+  case probe_stopped:              return("NPROBE_STOP");
   case packet_drop:                return("CAPTURE_DROP");
   case flow_export_error:          return("FLOW_EXPORT_ERROR");
   case collector_connection_error: return("COLLECTOR_CONNECTION_ERROR");

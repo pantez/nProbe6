@@ -1,14 +1,14 @@
 /*
  *
- *       Copyright (C) 2002-14 Luca Deri <deri@ltop.org>
+ *       Copyright (C) 2002-14 Luca Deri <deri@ntop.org>
  *
- *                     http://www.ltop.org/
+ *                     http://www.ntop.org/
  *
  */
 
-#define _lprobe_H_ /* Trick */
+#define _NPROBE_H_ /* Trick */
 
-#include "lprobe.h"
+#include "nprobe.h"
 #include "config.h"
 #include <string.h>
 

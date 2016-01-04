@@ -107,7 +107,7 @@
 /* Define to 1 if you have the `zmq' library (-lzmq). */
 #undef HAVE_LIBZMQ
 
-/* Check lprobe license */
+/* Check nprobe license */
 #undef HAVE_LICENSE
 
 /* Define to 1 if you have the <memory.h> header file. */
@@ -158,11 +158,11 @@
 /* Define to 1 if you have the <net/if.h> header file. */
 #undef HAVE_NET_IF_H
 
-/* Time we compiled lprobe */
+/* Time we compiled nprobe */
 #undef HAVE_NOW
 
-/* lprobe extensions present */
-#undef HAVE_lprobe_EXTENSIONS
+/* nProbe extensions present */
+#undef HAVE_NPROBE_EXTENSIONS
 
 /* libc has optreset */
 #undef HAVE_OPTRESET
@@ -173,7 +173,7 @@
 /* Native PF_RING support */
 #undef HAVE_PF_RING
 
-/* Check lprobe plugin licenses */
+/* Check nprobe plugin licenses */
 #undef HAVE_PLUGIN_LICENSE
 
 /* Define to 1 if you have the <pthread.h> header file. */
@@ -282,10 +282,10 @@
 #undef NEED_INET_ATON
 
 /* build for big endian */
-#undef lprobe_BIG_ENDIAN
+#undef NPROBE_BIG_ENDIAN
 
 /* build for little endian */
-#undef lprobe_LITTLE_ENDIAN
+#undef NPROBE_LITTLE_ENDIAN
 
 /* Name of package */
 #undef PACKAGE

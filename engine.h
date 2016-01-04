@@ -1,9 +1,9 @@
 /* 
- *        lprobe - a Netflow v5/v9/IPFIX probe for IPv4/v6 
+ *        nProbe - a Netflow v5/v9/IPFIX probe for IPv4/v6 
  *
- *       Copyright (C) 2002-14 Luca Deri <deri@ltop.org> 
+ *       Copyright (C) 2002-14 Luca Deri <deri@ntop.org> 
  *
- *                     http://www.ltop.org/ 
+ *                     http://www.ntop.org/ 
  * 
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -74,7 +74,7 @@ typedef void (*PluginIdleTaskFctn)(void);
 typedef void (*PluginIdleFlowFctn)(FlowHashBucket *theFlow, void *pluginData);
 
 typedef struct pluginEntryPoint {
-  char *lprobe_revision, *name, *short_name, *family, *version, *descr, *author;
+  char *nprobe_revision, *name, *short_name, *family, *version, *descr, *author;
   u_int8_t always_enabled, enabled, need_license;
   PluginInitFctn initFctn;
   PluginOptionsFctn optionsFctn;
@@ -181,7 +181,7 @@ extern u_int32_t getFlowDurationSec(FlowHashBucket *theFlow);
 extern V9V10TemplateElementId* getPluginTemplate(char* template_name, PluginEntryPoint **plugin);
 
 
-/* lprobe.c or lprobe_mod.c */
+/* nprobe.c or nprobe_mod.c */
 extern void queueBucketToExport(FlowHashBucket *myBucket);
 
 /* plugin.c */

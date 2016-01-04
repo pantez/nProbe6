@@ -1,8 +1,8 @@
 /*
  *
- *       Copyright (C) 2010 Luca Deri <deri@ltop.org>
+ *       Copyright (C) 2010 Luca Deri <deri@ntop.org>
  *
- *                     http://www.ltop.org/
+ *                     http://www.ntop.org/
  *
  * 
  */
@@ -70,7 +70,7 @@ static void maximize_socket_buffer(int sock_fd, int buf_type);
 
 /* Print simple copyright message */
 void copyright() {
-  traceEvent(TRACE_NORMAL, "nf_reflector v.%s - (C) 2010 ltop.org", REFLECTOR_VERSION);
+  traceEvent(TRACE_NORMAL, "nf_reflector v.%s - (C) 2010 ntop.org", REFLECTOR_VERSION);
 }
 
 /* ******************************** */

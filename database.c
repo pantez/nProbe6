@@ -1,9 +1,9 @@
 /*
- *        lprobe - a Netflow v5/v9/IPFIX probe for IPv4/v6
+ *        nProbe - a Netflow v5/v9/IPFIX probe for IPv4/v6
  *
- *       Copyright (C) 2004-14 Luca Deri <deri@ltop.org>
+ *       Copyright (C) 2004-14 Luca Deri <deri@ntop.org>
  *
- *                     http://www.ltop.org/
+ *                     http://www.ntop.org/
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "lprobe.h"
+#include "nprobe.h"
 
 #ifdef HAVE_MYSQL
 
@@ -321,7 +321,7 @@ void dump_flow2db(V9V10TemplateElementId **template, char *buffer, u_int32_t buf
 	if(dump_len > 0) {
 	  switch(template[i]->elementFormat) {
 	  case ipv6_address_format:
-	    /* ret = (char*)*/ inet_ltop(AF_INET6, &buffer[pos], &buf[1], sizeof(buf)-1);
+	    /* ret = (char*)*/ inet_ntop(AF_INET6, &buffer[pos], &buf[1], sizeof(buf)-1);
 	    j = strlen(buf);
 	    pos += field_len;
 	    break;
@@ -369,7 +369,7 @@ void dump_flow2db(V9V10TemplateElementId **template, char *buffer, u_int32_t buf
       if(readOnlyGlobals.enable_debug && (template[i] != NULL))
 	traceEvent(TRACE_INFO, "Handled %20s [id %d][%d bytes][total %d/%d bytes]",
 		   template[i]->netflowElementName,
-		   (template[i]->templateElementEnterpriseId == ltop_ENTERPRISE_ID) ? template[i]->templateElementId-ltop_BASE_ID : template[i]->templateElementId,
+		   (template[i]->templateElementEnterpriseId == NTOP_ENTERPRISE_ID) ? template[i]->templateElementId-NTOP_BASE_ID : template[i]->templateElementId,
 		   field_len, pos, buffer_len);
 
     }

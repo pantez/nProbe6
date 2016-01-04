@@ -1,9 +1,9 @@
 /*
- *        lprobe - a Netflow v5/v9/IPFIX probe for IPv4/v6
+ *        nProbe - a Netflow v5/v9/IPFIX probe for IPv4/v6
  *
- *       Copyright (C) 2002-14 Luca Deri <deri@ltop.org>
+ *       Copyright (C) 2002-14 Luca Deri <deri@ntop.org>
  *
- *                     http://www.ltop.org/
+ *                     http://www.ntop.org/
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,8 +21,8 @@
  */
 
 
-#ifndef _lprobe_H_
-#define _lprobe_H_
+#ifndef _NPROBE_H_
+#define _NPROBE_H_
 
 /* *************************** */
 
@@ -418,7 +418,7 @@ extern char *strtok_r(char *s, const char *delim, char **save_ptr);
 extern const char *strcasestr(const char *haystack, const char *needle);
 extern int ptw32_processInitialize (void);
 #endif
-extern int lprobe_sleep(int secToSleep);
+extern int nprobe_sleep(int secToSleep);
 
 #ifdef WIN32_THREADS
 extern int pthread_create(pthread_t *threadId, void* notUsed, void *(*__start_routine) (void *), char* userParm);
@@ -469,11 +469,11 @@ struct sctp_data_chunk {
 #endif
 
 #define PREFIX             "/usr/local"
-#define LICENSE_FILE_NAME  "lprobe.license"
+#define LICENSE_FILE_NAME  "nprobe.license"
 
 /*
   2^32 minus a large value so that we won't wrap for sure 
-  Note that lprobe can work as sFlow collector and thus
+  Note that nProbe can work as sFlow collector and thus
   we cannot expect packets to be 1500 bytes but they can
   very well be 3072000 or more. Thus better set a high
   threshold but not too high to risk missing the wrap
@@ -546,8 +546,8 @@ struct mobileip_header {
   u_int16_t reserved;
 };
 
-#define lprobe_REVISION "$Revision: 3962 $"
-extern char lprobe_revision[];
+#define NPROBE_REVISION "$Revision: 3962 $"
+extern char nprobe_revision[];
 
 typedef enum {
   text_format = 0,
@@ -804,48 +804,48 @@ struct icmp6_hdr {
 /*
  * Definition of ICMP types and code field values.
  */
-#define	lprobe_ICMP_ECHOREPLY		0		/* echo reply */
-#define	lprobe_ICMP_UNREACH		3		/* dest unreachable, codes: */
-#define	lprobe_ICMP_UNREACH_NET	        0		/* bad net */
-#define	lprobe_ICMP_UNREACH_HOST	1		/* bad host */
-#define	lprobe_ICMP_UNREACH_PROTOCOL	2		/* bad protocol */
-#define	lprobe_ICMP_UNREACH_PORT	3		/* bad port */
-#define	lprobe_ICMP_UNREACH_NEEDFRAG	4		/* IP_DF caused drop */
-#define	lprobe_ICMP_UNREACH_SRCFAIL	5		/* src route failed */
-#define	lprobe_ICMP_UNREACH_NET_UNKNOWN 6		/* unknown net */
-#define	lprobe_ICMP_UNREACH_HOST_UNKNOWN 7		/* unknown host */
-#define	lprobe_ICMP_UNREACH_ISOLATED	8		/* src host isolated */
-#define	lprobe_ICMP_UNREACH_NET_PROHIB	9		/* prohibited access */
-#define	lprobe_ICMP_UNREACH_HOST_PROHIB 10		/* ditto */
-#define	lprobe_ICMP_UNREACH_TOSNET	11		/* bad tos for net */
-#define	lprobe_ICMP_UNREACH_TOSHOST	12		/* bad tos for host */
-#define	lprobe_ICMP_UNREACH_FILTER_PROHIB 13		/* admin prohib */
-#define	lprobe_ICMP_UNREACH_HOST_PRECEDENCE 14		/* host prec vio. */
-#define	lprobe_ICMP_UNREACH_PRECEDENCE_CUTOFF 15	/* prec cutoff */
-#define	lprobe_ICMP_SOURCEQUENCH	 4		/* packet lost, slow down */
-#define	lprobe_ICMP_REDIRECT		 5		/* shorter route, codes: */
-#define	lprobe_ICMP_REDIRECT_NET	 0		/* for network */
-#define	lprobe_ICMP_REDIRECT_HOST	 1		/* for host */
-#define	lprobe_ICMP_REDIRECT_TOSNET	 2		/* for tos and net */
-#define	lprobe_ICMP_REDIRECT_TOSHOST	 3		/* for tos and host */
-#define	lprobe_ICMP_ECHO		 8		/* echo service */
-#define	lprobe_ICMP_ROUTERADVERT	 9		/* router advertisement */
-#define	lprobe_ICMP_ROUTERSOLICIT	10		/* router solicitation */
-#define	lprobe_ICMP_TIMXCEED		11		/* time exceeded, code: */
-#define	lprobe_ICMP_TIMXCEED_INTRANS	 0		/* ttl==0 in transit */
-#define	lprobe_ICMP_TIMXCEED_REASS	 1		/* ttl==0 in reass */
-#define	lprobe_ICMP_PARAMPROB		12		/* ip header bad */
-#define	lprobe_ICMP_PARAMPROB_ERRATPTR   0		/* error at param ptr */
-#define	lprobe_ICMP_PARAMPROB_OPTABSENT  1		/* req. opt. absent */
-#define	lprobe_ICMP_PARAMPROB_LENGTH     2			/* bad length */
-#define	lprobe_ICMP_TSTAMP		13		/* timestamp request */
-#define	lprobe_ICMP_TSTAMPREPLY	        14		/* timestamp reply */
-#define	lprobe_ICMP_IREQ		15		/* information request */
-#define	lprobe_ICMP_IREQREPLY		16		/* information reply */
-#define	lprobe_ICMP_MASKREQ		17		/* address mask request */
-#define	lprobe_ICMP_MASKREPLY		18		/* address mask reply */
+#define	NPROBE_ICMP_ECHOREPLY		0		/* echo reply */
+#define	NPROBE_ICMP_UNREACH		3		/* dest unreachable, codes: */
+#define	NPROBE_ICMP_UNREACH_NET	        0		/* bad net */
+#define	NPROBE_ICMP_UNREACH_HOST	1		/* bad host */
+#define	NPROBE_ICMP_UNREACH_PROTOCOL	2		/* bad protocol */
+#define	NPROBE_ICMP_UNREACH_PORT	3		/* bad port */
+#define	NPROBE_ICMP_UNREACH_NEEDFRAG	4		/* IP_DF caused drop */
+#define	NPROBE_ICMP_UNREACH_SRCFAIL	5		/* src route failed */
+#define	NPROBE_ICMP_UNREACH_NET_UNKNOWN 6		/* unknown net */
+#define	NPROBE_ICMP_UNREACH_HOST_UNKNOWN 7		/* unknown host */
+#define	NPROBE_ICMP_UNREACH_ISOLATED	8		/* src host isolated */
+#define	NPROBE_ICMP_UNREACH_NET_PROHIB	9		/* prohibited access */
+#define	NPROBE_ICMP_UNREACH_HOST_PROHIB 10		/* ditto */
+#define	NPROBE_ICMP_UNREACH_TOSNET	11		/* bad tos for net */
+#define	NPROBE_ICMP_UNREACH_TOSHOST	12		/* bad tos for host */
+#define	NPROBE_ICMP_UNREACH_FILTER_PROHIB 13		/* admin prohib */
+#define	NPROBE_ICMP_UNREACH_HOST_PRECEDENCE 14		/* host prec vio. */
+#define	NPROBE_ICMP_UNREACH_PRECEDENCE_CUTOFF 15	/* prec cutoff */
+#define	NPROBE_ICMP_SOURCEQUENCH	 4		/* packet lost, slow down */
+#define	NPROBE_ICMP_REDIRECT		 5		/* shorter route, codes: */
+#define	NPROBE_ICMP_REDIRECT_NET	 0		/* for network */
+#define	NPROBE_ICMP_REDIRECT_HOST	 1		/* for host */
+#define	NPROBE_ICMP_REDIRECT_TOSNET	 2		/* for tos and net */
+#define	NPROBE_ICMP_REDIRECT_TOSHOST	 3		/* for tos and host */
+#define	NPROBE_ICMP_ECHO		 8		/* echo service */
+#define	NPROBE_ICMP_ROUTERADVERT	 9		/* router advertisement */
+#define	NPROBE_ICMP_ROUTERSOLICIT	10		/* router solicitation */
+#define	NPROBE_ICMP_TIMXCEED		11		/* time exceeded, code: */
+#define	NPROBE_ICMP_TIMXCEED_INTRANS	 0		/* ttl==0 in transit */
+#define	NPROBE_ICMP_TIMXCEED_REASS	 1		/* ttl==0 in reass */
+#define	NPROBE_ICMP_PARAMPROB		12		/* ip header bad */
+#define	NPROBE_ICMP_PARAMPROB_ERRATPTR   0		/* error at param ptr */
+#define	NPROBE_ICMP_PARAMPROB_OPTABSENT  1		/* req. opt. absent */
+#define	NPROBE_ICMP_PARAMPROB_LENGTH     2			/* bad length */
+#define	NPROBE_ICMP_TSTAMP		13		/* timestamp request */
+#define	NPROBE_ICMP_TSTAMPREPLY	        14		/* timestamp reply */
+#define	NPROBE_ICMP_IREQ		15		/* information request */
+#define	NPROBE_ICMP_IREQREPLY		16		/* information reply */
+#define	NPROBE_ICMP_MASKREQ		17		/* address mask request */
+#define	NPROBE_ICMP_MASKREPLY		18		/* address mask reply */
 
-#define	lprobe_ICMP_MAXTYPE		18
+#define	NPROBE_ICMP_MAXTYPE		18
 
 /* ********* NETFLOW ****************** */
 
@@ -1051,7 +1051,7 @@ typedef struct flowSetV9Ipfix {
 } FlowSetV9Ipfix;
 
 #define STANDARD_ENTERPRISE_ID                0
-#define ltop_ENTERPRISE_ID           0x00008B30 /* IANA assignment for ltop */
+#define NTOP_ENTERPRISE_ID           0x00008B30 /* IANA assignment for ntop */
 
 typedef enum {
   ascii_format = 0,
@@ -1344,7 +1344,7 @@ typedef struct {
   u_int32_t bufferLen;
   PluginEntryPoint *templatePlugin; /* 
 				       Pointer to the plugin (if any) that handles
-				       fields not part of the base lprobe
+				       fields not part of the base nProbe
 				    */
 } TemplateBufferInfo;
 
@@ -1386,7 +1386,7 @@ typedef struct {
   /* -B support courtesy of Mark Notarus <notarus@uiuc.edu> */
   u_short packetFlowGroup; /* # packets to send before we delay */
 #ifndef WIN32
-  char lprobeId[255+1];
+  char nprobeId[255+1];
 #endif
   struct fileList *pcapFileList;
   char *pcapFile, *flowLockFile, *pidPath;
@@ -1529,7 +1529,7 @@ typedef struct {
 #endif
 
   /* Status */
-  u_int8_t lprobe_up, dequeueBucketToExport_up, num_active_plugins;
+  u_int8_t nprobe_up, dequeueBucketToExport_up, num_active_plugins;
   u_int8_t quick_mode, fakePacketCapture, checkMemoryBoundaries, max_packet_ordering_queue;
   u_int32_t maxLogLines;
 
@@ -1542,7 +1542,7 @@ typedef struct {
   u_int64_t num_pkts_with_flow_creation, num_pkts_without_flow_creation, num_exported_buckets,
     num_purged_buckets, num_allocated_buckets, num_malloced_buckets;
 
-  unsigned long lprobePid; /* 0 on Windows */
+  unsigned long nprobePid; /* 0 on Windows */
   BiflowsExportPolicy biflowsExportPolicy; /* default: export_all_flows */
 
   /* Cache */
@@ -1791,7 +1791,7 @@ typedef struct {
 extern void exportBucket(FlowHashBucket *myBucket, u_char free_memory);
 extern void close_dump_file(void);
 
-/* lprobe.c */
+/* nprobe.c */
 extern void decodePacket(u_short thread_id,
 			 int packet_if_idx /* -1 = unknown */,
 			 struct pcap_pkthdr *h, const u_char *p,
@@ -1802,7 +1802,7 @@ extern void decodePacket(u_short thread_id,
 			 u_int32_t flow_sender_ip,
 			 u_int32_t packet_hash);
 extern void recycleBucket(FlowHashBucket *myBucket);
-extern void shutdown_lprobe(void);
+extern void shutdown_nprobe(void);
 extern void initL7Discovery(void);
 
 /* database.c */
@@ -1930,17 +1930,17 @@ extern void flowPrintf(V9V10TemplateElementId **templateList,
 		       u_int8_t json_mode);
 
 #ifdef WIN32
-extern char* lprobe_strdup(const char *str);
-extern int lprobe_inet_pton(int af, const char *src, void *dst);
+extern char* nprobe_strdup(const char *str);
+extern int nprobe_inet_pton(int af, const char *src, void *dst);
 
-#define strdup(a)       lprobe_strdup(a) /* _strdup(a) */
+#define strdup(a)       nprobe_strdup(a) /* _strdup(a) */
 #define stricmp(a,b)    _stricmp(a,b)
 #define snprintf	_snprintf
-#define inet_pton(a, b, c) lprobe_inet_pton(a, b, c)
+#define inet_pton(a, b, c) nprobe_inet_pton(a, b, c)
 
 #endif
 
-#endif /* _lprobe_H_ */
+#endif /* _NPROBE_H_ */
 
 
 /* Don't move this #define above */

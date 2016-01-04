@@ -1,9 +1,9 @@
 /*
- *        lprobe - a Netflow v5/v9/IPFIX probe for IPv4/v6
+ *        nProbe - a Netflow v5/v9/IPFIX probe for IPv4/v6
  *
- *       Copyright (C) 2002-14 Luca Deri <deri@ltop.org>
+ *       Copyright (C) 2002-14 Luca Deri <deri@ntop.org>
  *
- *                     http://www.ltop.org/
+ *                     http://www.ntop.org/
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@
  * http://social.technet.microsoft.com/wiki/contents/articles/8103.application-crash-dump-analysis-windows-7.aspx
  */
 
-#include "lprobe.h"
+#include "nprobe.h"
 
 #include <intrin.h> /* __cpuid */
 
@@ -498,7 +498,7 @@ char* printAvailableInterfaces(char *name_or_index) {
 #define INT16SZ     2    /* word size */
 #endif
 
-static const char* inet_ltop_v4 (const void *src, char *dst, size_t size)
+static const char* inet_ntop_v4 (const void *src, char *dst, size_t size)
 {
   const char digits[] = "0123456789";
   int i;
@@ -535,7 +535,7 @@ static const char* inet_ltop_v4 (const void *src, char *dst, size_t size)
 /*
  * Convert IPv6 binary address into presentation (printable) format.
  */
-static const char* inet_ltop_v6 (const u_char *src, char *dst, size_t size)
+static const char* inet_ntop_v6 (const u_char *src, char *dst, size_t size)
 {
   /*
    * Note that int32_t and int16_t need only be "at least" large enough
@@ -607,7 +607,7 @@ static const char* inet_ltop_v6 (const u_char *src, char *dst, size_t size)
       if (i == 6 && best.base == 0 &&
 	  (best.len == 6 || (best.len == 5 && words[5] == 0xffff)))
 	{
-	  if (!inet_ltop_v4(src+12, tp, sizeof(tmp) - (tp - tmp)))
+	  if (!inet_ntop_v4(src+12, tp, sizeof(tmp) - (tp - tmp)))
 	    {
 	      errno = ENOSPC;
 	      return (NULL);
@@ -638,16 +638,16 @@ static const char* inet_ltop_v6 (const u_char *src, char *dst, size_t size)
 
 PCSTR
 WSAAPI
-inet_ltop(
+inet_ntop(
 	  __in                                INT             af,
 	  __in                                PVOID           src,
 	  __out_ecount(StringBufSize)         PSTR            dst,
 	  __in                                size_t          size
 	  ){    switch (af) {
   case AF_INET :
-    return inet_ltop_v4 (src, dst, size);
+    return inet_ntop_v4 (src, dst, size);
   case AF_INET6:
-    return inet_ltop_v6 ((const u_char*)src, dst, size);
+    return inet_ntop_v6 ((const u_char*)src, dst, size);
   default :
     errno = WSAEAFNOSUPPORT;
     return NULL;
@@ -656,7 +656,7 @@ inet_ltop(
 
 /* *********************************************************** */
 
-char* lprobe_strdup(const char *str) {
+char* nprobe_strdup(const char *str) {
 	int len;
 	char *ret;
 
@@ -677,7 +677,7 @@ char* lprobe_strdup(const char *str) {
 
 /* *********************************************************** */
 
-int lprobe_inet_pton(int af, const char *src, void *dst) {
+int nprobe_inet_pton(int af, const char *src, void *dst) {
   if(af != AF_INET) {
     errno = EAFNOSUPPORT;
     return -1;
@@ -693,7 +693,7 @@ extern int IsLicenseValid();
 
 /**************************************************
   IsLicenseValid() 
-  Returns 0 when LicenseInvalid or expired (Put lprobe in Demo Mode)
+  Returns 0 when LicenseInvalid or expired (Put nProbe in Demo Mode)
   Returns 1 when LicenseOK
 
   http://solananetworks.com/

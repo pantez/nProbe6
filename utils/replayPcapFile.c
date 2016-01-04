@@ -1,7 +1,7 @@
 /*
- *  Copyright (C) 2009 Luca Deri <deri@ltop.org>
+ *  Copyright (C) 2009 Luca Deri <deri@ntop.org>
  *
- *  			http://www.ltop.org/
+ *  			http://www.ntop.org/
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

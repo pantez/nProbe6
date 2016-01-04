@@ -1,13 +1,13 @@
 dnl>
-dnl> Copyright (C) 2002-14 Luca Deri <deri@ltop.org>
+dnl> Copyright (C) 2002-14 Luca Deri <deri@ntop.org>
 dnl>
 
 
 dnl>
 dnl> standard Autoconf prolog
 dnl>
-dnl> lprobe version <major version>.<minor version>.<build date>
-AC_INIT([lprobe],[6.16.140306])
+dnl> nprobe version <major version>.<minor version>.<build date>
+AC_INIT([nprobe],[6.16.140306])
 AC_PREREQ(2.52)
 AC_REVISION([1.0])
 
@@ -32,7 +32,7 @@ fi
 
 echo
 echo "Welcome to $PACKAGE_NAME, Version $PACKAGE_VERSION"
-echo "Copyright (C) 2002-14 Luca Deri <deri@ltop.org>"
+echo "Copyright (C) 2002-14 Luca Deri <deri@ntop.org>"
 echo
 
 THE_UID=`id -u`
@@ -82,8 +82,8 @@ AC_ARG_WITH(pcap-root,
             [  --with-pcap-root=DIR    LBNL pcap located in DIR],
             PCAP_ROOT="$withval",
             PCAP_ROOT=)
-AC_ARG_WITH(static-lprobe,
-              [  --with-static-lprobe    Build static lprobe (make lprobes)],
+AC_ARG_WITH(static-nprobe,
+              [  --with-static-nprobe    Build static nprobe (make nprobes)],
               [ CFLAGS="-DMAKE_STATIC_PLUGINS $CFLAGS"] )
 
 AC_ARG_WITH(napatech,
@@ -121,12 +121,12 @@ DEFS="-DHAVE_CONFIG_H"
 dnl> CFLAGS="-g $CFLAGS"
 HERE=`pwd`
 
-AC_DEFINE(HAVE_NOW, 1394119422, [Time we compiled lprobe])
+AC_DEFINE(HAVE_NOW, 1394119422, [Time we compiled nprobe])
 
 dnl Test endianness
-AC_C_BIGENDIAN([ AC_DEFINE(lprobe_BIG_ENDIAN, 1, [build for big endian]) ]
-, [ AC_DEFINE(lprobe_LITTLE_ENDIAN, 1, [build for little endian]) ]
-, [ AC_DEFINE(lprobe_BIG_ENDIAN, 1, [build for big endian]) ]
+AC_C_BIGENDIAN([ AC_DEFINE(NPROBE_BIG_ENDIAN, 1, [build for big endian]) ]
+, [ AC_DEFINE(NPROBE_LITTLE_ENDIAN, 1, [build for little endian]) ]
+, [ AC_DEFINE(NPROBE_BIG_ENDIAN, 1, [build for big endian]) ]
 )
 
 dnl>
@@ -139,10 +139,10 @@ dnl> FreeBSD
 AM_INIT_AUTOMAKE($PACKAGE,$VERSION)
 
 dnl>
-dnl> make lprobeDIR the default for the installation
+dnl> make NPROBEDIR the default for the installation
 dnl>
 
-AC_PREFIX_DEFAULT(${lprobeDIR:-/usr/local})
+AC_PREFIX_DEFAULT(${NPROBEDIR:-/usr/local})
 
 dnl> Add /usr/local/ /opt/local
 CFLAGS="${CFLAGS} -I/usr/local/include -I/opt/local/include"
@@ -213,10 +213,10 @@ if test "$LICENSE" != ""; then
   if test -d "./private/license"; then
      LICENSELIBS="-L`pwd`/private/license -llicense"
      MORELIBS="${MORELIBS} ${LICENSELIBS}"
-     AC_DEFINE(HAVE_LICENSE, 1, [Check lprobe license])
+     AC_DEFINE(HAVE_LICENSE, 1, [Check nprobe license])
      USE_LICENSE=private/license/liblicense.a
      if test "$PLUGIN_LICENSE" != "no"; then
-         AC_DEFINE(HAVE_PLUGIN_LICENSE, 1, [Check lprobe plugin licenses])
+         AC_DEFINE(HAVE_PLUGIN_LICENSE, 1, [Check nprobe plugin licenses])
      fi
    fi
 fi
@@ -234,7 +234,7 @@ if test ".${ac_cv_header_dlfcn_h}" != ".yes"; then
     echo "Unable to find dlfcn.h"
     echo ""
     echo "You cannot use dlopen load plugins."
-    echo "Build lprobe without plugin support or with dynamic plugins."
+    echo "Build nprobe without plugin support or with dynamic plugins."
 fi
 
 dnl> MANDATORY general purpose headers
@@ -435,7 +435,7 @@ fi
 
 HAVE_ARM=0
 if test -d ${LIBPCAP_ARM}; then
-echo "Found ${LIBPCAP_ARM}: we'll be building lprobe for the ARM platform."
+echo "Found ${LIBPCAP_ARM}: we'll be building nProbe for the ARM platform."
 AC_DEFINE_UNQUOTED(HAVE_ARM, 1, [ARM is supported])
 INCS="${INCS} -I ${LIBPCAP_ARM}"
 CORELIBS="${CORELIBS} ${LIBPCAP_ARM}/libpcap.a"
@@ -557,7 +557,7 @@ NDPI_INC=$HERE/nDPI/src/include/
 
 
 dnl>
-dnl> Leave it here as it might be needed by those linking lprobe
+dnl> Leave it here as it might be needed by those linking nProbe
 dnl> against a PF_RING-enabled library
 dnl>
 dnl> AC_CHECK_LIB(pfring, pfring_open)
@@ -575,7 +575,7 @@ dnl> order as follow
 dnl> 1. user defined libpcap development tree
 dnl> 2. standard installation in /usr/lib and /usr/include respectively
 dnl> 3. default package installation in /usr/local/lib and /usr/local/include respectively
-dnl> 4. libpcap-0.4 development tree under the same lprobe's root directory or in a subdir
+dnl> 4. libpcap-0.4 development tree under the same nprobe's root directory or in a subdir
 
 AC_MSG_CHECKING([for libpcap (required package)])
 
@@ -687,7 +687,7 @@ AC_CHECK_LIB([pcap], [pcap_next_ex], AC_DEFINE_UNQUOTED(HAVE_PCAP_NEXT_EX, 1, [p
 LIBS=$SAVE_LIBS
 dnl> ##################################
 
-if test ".${with_static_lprobe}" != ".yes"; then
+if test ".${with_static_nprobe}" != ".yes"; then
 dnl> GeoIP (http://www.maxmind.com/)
 GEOIP_TARGET=
 
@@ -715,13 +715,13 @@ AC_DEFINE_UNQUOTED(HAVE_GEOIP, 1, [GeoIP support is present])
 GEOIP_DEP="GeoIP >= 1.4.8"
 GEOIP_TARGET=datfiles
 else
-AC_MSG_RESULT(Build lprobe without geolocation - GeoIP (http://www.maxmind.com/))
+AC_MSG_RESULT(Build nprobe without geolocation - GeoIP (http://www.maxmind.com/))
 GEOIP_DEP=""
 fi
 dnl > else of GeoIP
 fi
 
-dnl> static lprobe
+dnl> static nprobe
 fi
 
 
@@ -740,10 +740,10 @@ fi
 
 AC_CHECK_LIB([rt], [clock_gettime])
 
-if test -f "../lprobe-utils/extensions/templates.c"; then
+if test -f "../nProbe-utils/extensions/templates.c"; then
   AC_DEFINE_UNQUOTED(HAVE_TEMPLATE_EXTENSIONS, 1, [Have template extensions])
-  INC_TO_ADD="-I$HERE/../lprobe-utils/extensions -I$HERE/../lprobe-utils/extensions/libnfsender/include"
-  LIBS="${LIBS} $HERE/../lprobe-utils/extensions/libnfsender/lib/libnfsender.a"
+  INC_TO_ADD="-I$HERE/../nProbe-utils/extensions -I$HERE/../nProbe-utils/extensions/libnfsender/include"
+  LIBS="${LIBS} $HERE/../nProbe-utils/extensions/libnfsender/lib/libnfsender.a"
   CFLAGS="${CFLAGS} ${INC_TO_ADD}"
   CPPFLAGS="${CPPFLAGS} ${INC_TO_ADD}"
 fi
@@ -753,11 +753,11 @@ AC_CHECK_LIB([json-c], [json_object_new_object])
 if test "x$ac_cv_lib_json_c_json_object_new_object" = x""yes; then
 	LIBS="${LIBS} -ljson-c"
  if test -d "extensions/"; then
-   AC_DEFINE_UNQUOTED(HAVE_lprobe_EXTENSIONS, 1, [lprobe extensions present])
+   AC_DEFINE_UNQUOTED(HAVE_NPROBE_EXTENSIONS, 1, [nProbe extensions present])
  fi
 fi
 
-if test ".${with_static_lprobe}" != ".yes"; then
+if test ".${with_static_nprobe}" != ".yes"; then
 PATH=$PATH:/usr/local/mysql/bin
 AC_CHECK_TOOL(MYSQL, mysql_config)
 dnl> echo "--> $ac_cv_prog_ac_ct_MYSQL"
@@ -865,7 +865,7 @@ AC_SUBST(NOW)
 
 AC_CONFIG_FILES([Makefile])
 AC_CONFIG_FILES([utils/Makefile])
-AC_CONFIG_FILES([packages/lprobe.spec])
+AC_CONFIG_FILES([packages/nprobe.spec])
 AC_CONFIG_FILES([packages/n2disk.spec])
 AC_CONFIG_FILES([packages/n2disknt.spec])
 AC_CONFIG_FILES([private/n2disk_version.h])
@@ -905,7 +905,7 @@ echo "unsigned int compile_time = 1394119422;" >> version.c
 if test ".${HAS_WARNING}" = ".yes"; then
     echo "*"
     echo "*>>>>  A WARNING message was generated - please review the"
-    echo "*>>>>  output before continuing to make lprobe!"
+    echo "*>>>>  output before continuing to make nprobe!"
 fi
 
 echo "

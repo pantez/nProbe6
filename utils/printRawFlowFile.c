@@ -1,7 +1,7 @@
 /*
- *  Copyright (C) 2012 Luca Deri <deri@ltop.org>
+ *  Copyright (C) 2012 Luca Deri <deri@ntop.org>
  *
- *  			http://www.ltop.org/
+ *  			http://www.ntop.org/
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -18,7 +18,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
 
-#include "../lprobe.h"
+#include "../nprobe.h"
 
 
 /* ************************************* */
@@ -26,7 +26,7 @@
 static void help() {
   printf("printRawFlowFile -f <file>.flows\n");
   printf("   -f <file>.flows  | Dump file to print\n");
-  printf("Print a file dumped by lprobe with option '-D B'. This is a debug tool!\n");
+  printf("Print a file dumped by nProbe with option '-D B'. This is a debug tool!\n");
 
   exit(0);
 }
@@ -74,7 +74,7 @@ static char* intoa(IpAddress addr, char* buf, u_short bufLen) {
     char *ret;
     int len;
 
-    ret = (char*)inet_ltop(AF_INET6, &addr.ipType.ipv6, buf, bufLen);
+    ret = (char*)inet_ntop(AF_INET6, &addr.ipType.ipv6, buf, bufLen);
 
     if(ret == NULL) {
       printf("WARNING: Internal error (buffer too short)");

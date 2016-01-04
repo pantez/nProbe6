@@ -1,9 +1,9 @@
 /*
- *        lprobe - a Netflow v5/v9/IPFIX probe for IPv4/v6
+ *        nProbe - a Netflow v5/v9/IPFIX probe for IPv4/v6
  *
- *       Copyright (C) 2002-14 Luca Deri <deri@ltop.org>
+ *       Copyright (C) 2002-14 Luca Deri <deri@ntop.org>
  *
- *                     http://www.ltop.org/
+ *                     http://www.ntop.org/
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "lprobe.h"
+#include "nprobe.h"
 
 
 /* ****************************************************** */
@@ -101,9 +101,9 @@ char* _intoa(IpAddress addr, char* buf, u_short bufLen) {
     int len;
 
 #if 0
-    ret = (char*)inet_ltop(AF_INET6, &addr.ipType.ipv6, &buf[1], bufLen-2);
+    ret = (char*)inet_ntop(AF_INET6, &addr.ipType.ipv6, &buf[1], bufLen-2);
 #else
-    ret = (char*)inet_ltop(AF_INET6, &addr.ipType.ipv6, buf, bufLen);
+    ret = (char*)inet_ntop(AF_INET6, &addr.ipType.ipv6, buf, bufLen);
 #endif
 
     if(ret == NULL) {
@@ -294,7 +294,7 @@ void updateApplLatency(u_short proto, FlowHashBucket *bkt,
 	  bkt->ext->extensions->dst2srcApplLatency.tv_usec = bkt->ext->extensions->src2dstApplLatency.tv_usec-bkt->ext->extensions->dst2srcApplLatency.tv_usec;
 
 	bkt->ext->extensions->src2dstApplLatency.tv_sec = 0, bkt->ext->extensions->src2dstApplLatency.tv_usec = 0;
-	lprobe_FD_SET(FLAG_APPL_LATENCY_COMPUTED, &(bkt->ext->flags));
+	NPROBE_FD_SET(FLAG_APPL_LATENCY_COMPUTED, &(bkt->ext->flags));
       }
     } else {
       /* dst -> src */
@@ -312,7 +312,7 @@ void updateApplLatency(u_short proto, FlowHashBucket *bkt,
 	  bkt->ext->extensions->src2dstApplLatency.tv_usec = bkt->ext->extensions->dst2srcApplLatency.tv_usec-bkt->ext->extensions->src2dstApplLatency.tv_usec;
 
 	bkt->ext->extensions->dst2srcApplLatency.tv_sec = 0, bkt->ext->extensions->dst2srcApplLatency.tv_usec = 0;
-	lprobe_FD_SET(FLAG_APPL_LATENCY_COMPUTED, &(bkt->ext->flags));
+	NPROBE_FD_SET(FLAG_APPL_LATENCY_COMPUTED, &(bkt->ext->flags));
       }
     }
 
@@ -486,7 +486,7 @@ static void updateTcpSeq(struct timeval *when,
 
   // if(unlikely(readOnlyGlobals.enable_debug)) traceEvent(TRACE_ERROR, "updateTcpSeq(seqNum=%u, ackNum=%u)", tcpSeqNum, tcpAckNum);
 
-  /* Not always lprobe gets the TCP sequence number */
+  /* Not always nProbe gets the TCP sequence number */
   if(tcpSeqNum == 0) return;
 
   nextSeqNum = getNextTcpSeq(tcpFlags, tcpSeqNum, payloadLen);
@@ -606,7 +606,7 @@ static void updateTcpSeq(struct timeval *when,
 /* ****************************************************** */
 
 /*
-  Client           lprobe         Server
+  Client           nProbe         Server
   ->    SYN                       synTime
   <-    SYN|ACK                   synAckTime
   ->    ACK                       ackTime
@@ -655,8 +655,8 @@ void updateTcpFlags(FlowHashBucket *bkt, FlowDirection direction,
     } else if(flags == TH_ACK) {
       if(bkt->ext->extensions->synTime.tv_sec == 0) {
 	/* We missed the SYN flag */
-	lprobe_FD_SET(FLAG_NW_LATENCY_COMPUTED,   &(bkt->ext->flags));
-	lprobe_FD_SET(FLAG_APPL_LATENCY_COMPUTED, &(bkt->ext->flags)); /* We cannot calculate it as we have
+	NPROBE_FD_SET(FLAG_NW_LATENCY_COMPUTED,   &(bkt->ext->flags));
+	NPROBE_FD_SET(FLAG_APPL_LATENCY_COMPUTED, &(bkt->ext->flags)); /* We cannot calculate it as we have
 									  missed the 3-way handshake */
 	return;
       }
@@ -667,7 +667,7 @@ void updateTcpFlags(FlowHashBucket *bkt, FlowDirection direction,
 
       if(bkt->ext->extensions->synAckTime.tv_sec > 0) {
 	timeval_diff(&bkt->ext->extensions->synAckTime, stamp, &bkt->ext->extensions->clientNwDelay, 1);
-	lprobe_FD_SET(FLAG_NW_LATENCY_COMPUTED, &(bkt->ext->flags));
+	NPROBE_FD_SET(FLAG_NW_LATENCY_COMPUTED, &(bkt->ext->flags));
 	updateApplLatency(IPPROTO_TCP, bkt, direction, stamp);
 
 #if 0
@@ -2145,10 +2145,10 @@ FlowHashBucket* processFlowPacket(u_short thread_id,
     /* We "& 0x7F" as with IPv6 the codes will exceed the bitmask */
     if(direction == src2dst_direction) {
       bkt->ext->protoCounters.icmp.src2dstIcmpType = val;
-      lprobe_FD_SET(icmpType & 0x7F, &bkt->ext->protoCounters.icmp.src2dstIcmpFlags);
+      NPROBE_FD_SET(icmpType & 0x7F, &bkt->ext->protoCounters.icmp.src2dstIcmpFlags);
     } else {
       bkt->ext->protoCounters.icmp.dst2srcIcmpType = val;
-      lprobe_FD_SET(icmpType & 0x7F, &bkt->ext->protoCounters.icmp.dst2srcIcmpFlags);
+      NPROBE_FD_SET(icmpType & 0x7F, &bkt->ext->protoCounters.icmp.dst2srcIcmpFlags);
     }
   }
 
@@ -2224,44 +2224,44 @@ FlowHashBucket* processFlowPacket(u_short thread_id,
 
 /* ****************************************************** */
 
-#define	lprobe_ICMP_V6_ECHO_REQUEST   128		/* V6 echo request */
-#define	lprobe_ICMP_V6_ECHO_REPLY     129		/* V6 echo reply */
-#define	lprobe_ICMP_V6_ROUTER_SOL     133		/* V6 router solicitation */
-#define	lprobe_ICMP_V6_ROUTER_ADV     134		/* V6 router advertisement */
-#define	lprobe_ICMP_V6_NEIGHBOR_SOL   135		/* V6 neighbor solicitation */
-#define	lprobe_ICMP_V6_NEIGHBOR_ADV   136		/* V6 neighbor advertisement */
-#define	lprobe_ICMP_V6_MDPV2          143		/* V6 Multicast Listener Report Message v2 */
+#define	NPROBE_ICMP_V6_ECHO_REQUEST   128		/* V6 echo request */
+#define	NPROBE_ICMP_V6_ECHO_REPLY     129		/* V6 echo reply */
+#define	NPROBE_ICMP_V6_ROUTER_SOL     133		/* V6 router solicitation */
+#define	NPROBE_ICMP_V6_ROUTER_ADV     134		/* V6 router advertisement */
+#define	NPROBE_ICMP_V6_NEIGHBOR_SOL   135		/* V6 neighbor solicitation */
+#define	NPROBE_ICMP_V6_NEIGHBOR_ADV   136		/* V6 neighbor advertisement */
+#define	NPROBE_ICMP_V6_MDPV2          143		/* V6 Multicast Listener Report Message v2 */
 
 
 void printICMPflags(u_int8_t proto, u_int32_t flags, char *icmpBuf, int icmpBufLen) {
 
   if(proto == IPPROTO_ICMPV6) {
     snprintf(icmpBuf, icmpBufLen, "%s%s%s%s%s%s%s",
-	     lprobe_FD_ISSET(lprobe_ICMP_V6_ECHO_REQUEST & 0x7F, &flags)     ? "[ECHO REQUEST]" : "",
-	     lprobe_FD_ISSET(lprobe_ICMP_V6_ECHO_REPLY & 0x7F, &flags)     ? "[ECHO REPLY]" : "",
-	     lprobe_FD_ISSET(lprobe_ICMP_V6_ROUTER_SOL & 0x7F, &flags)     ? "[ROUTER SOLIC]" : "",
-	     lprobe_FD_ISSET(lprobe_ICMP_V6_ROUTER_ADV & 0x7F, &flags)     ? "[ROUTER ADV]" : "",
-	     lprobe_FD_ISSET(lprobe_ICMP_V6_NEIGHBOR_SOL & 0x7F, &flags)     ? "[NEIGHBOR SOLIC]" : "",
-	     lprobe_FD_ISSET(lprobe_ICMP_V6_NEIGHBOR_ADV & 0x7F, &flags)     ? "[NEIGHBOR ADV]" : "",
-	     lprobe_FD_ISSET(lprobe_ICMP_V6_MDPV2 & 0x7F, &flags)     ? "[MDP V2]" : ""
+	     NPROBE_FD_ISSET(NPROBE_ICMP_V6_ECHO_REQUEST & 0x7F, &flags)     ? "[ECHO REQUEST]" : "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_V6_ECHO_REPLY & 0x7F, &flags)     ? "[ECHO REPLY]" : "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_V6_ROUTER_SOL & 0x7F, &flags)     ? "[ROUTER SOLIC]" : "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_V6_ROUTER_ADV & 0x7F, &flags)     ? "[ROUTER ADV]" : "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_V6_NEIGHBOR_SOL & 0x7F, &flags)     ? "[NEIGHBOR SOLIC]" : "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_V6_NEIGHBOR_ADV & 0x7F, &flags)     ? "[NEIGHBOR ADV]" : "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_V6_MDPV2 & 0x7F, &flags)     ? "[MDP V2]" : ""
 	     );
   } else {
     snprintf(icmpBuf, icmpBufLen, "%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s",
-	     lprobe_FD_ISSET(lprobe_ICMP_ECHOREPLY, &flags)     ? "[ECHO REPLY]" : "",
-	     lprobe_FD_ISSET(lprobe_ICMP_UNREACH, &flags)       ? "[UNREACH]": "",
-	     lprobe_FD_ISSET(lprobe_ICMP_SOURCEQUENCH, &flags)  ? "[SOURCE_QUENCH]": "",
-	     lprobe_FD_ISSET(lprobe_ICMP_REDIRECT, &flags)      ? "[REDIRECT]": "",
-	     lprobe_FD_ISSET(lprobe_ICMP_ECHO, &flags)          ? "[ECHO]": "",
-	     lprobe_FD_ISSET(lprobe_ICMP_ROUTERADVERT, &flags)  ? "[ROUTERADVERT]": "",
-	     lprobe_FD_ISSET(lprobe_ICMP_ROUTERSOLICIT, &flags) ? "[ROUTERSOLICIT]": "",
-	     lprobe_FD_ISSET(lprobe_ICMP_TIMXCEED, &flags)      ? "[TIMXCEED]": "",
-	     lprobe_FD_ISSET(lprobe_ICMP_PARAMPROB, &flags)     ? "[PARAMPROB]": "",
-	     lprobe_FD_ISSET(lprobe_ICMP_TSTAMP, &flags)        ? "[TIMESTAMP]": "",
-	     lprobe_FD_ISSET(lprobe_ICMP_TSTAMPREPLY, &flags)   ? "[TIMESTAMP REPLY]": "",
-	     lprobe_FD_ISSET(lprobe_ICMP_IREQ, &flags)          ? "[INFO REQ]": "",
-	     lprobe_FD_ISSET(lprobe_ICMP_IREQREPLY, &flags)     ? "[INFO REPLY]": "",
-	     lprobe_FD_ISSET(lprobe_ICMP_MASKREQ , &flags)      ? "[MASK REQ]": "",
-	     lprobe_FD_ISSET(lprobe_ICMP_MASKREPLY, &flags)     ? "[MASK REPLY]": "");
+	     NPROBE_FD_ISSET(NPROBE_ICMP_ECHOREPLY, &flags)     ? "[ECHO REPLY]" : "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_UNREACH, &flags)       ? "[UNREACH]": "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_SOURCEQUENCH, &flags)  ? "[SOURCE_QUENCH]": "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_REDIRECT, &flags)      ? "[REDIRECT]": "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_ECHO, &flags)          ? "[ECHO]": "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_ROUTERADVERT, &flags)  ? "[ROUTERADVERT]": "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_ROUTERSOLICIT, &flags) ? "[ROUTERSOLICIT]": "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_TIMXCEED, &flags)      ? "[TIMXCEED]": "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_PARAMPROB, &flags)     ? "[PARAMPROB]": "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_TSTAMP, &flags)        ? "[TIMESTAMP]": "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_TSTAMPREPLY, &flags)   ? "[TIMESTAMP REPLY]": "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_IREQ, &flags)          ? "[INFO REQ]": "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_IREQREPLY, &flags)     ? "[INFO REPLY]": "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_MASKREQ , &flags)      ? "[MASK REQ]": "",
+	     NPROBE_FD_ISSET(NPROBE_ICMP_MASKREPLY, &flags)     ? "[MASK REPLY]": "");
   }
 }
 

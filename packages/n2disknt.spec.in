@@ -4,9 +4,9 @@ Version: @N2DISK_PACKAGE_VERSION@
 Release: %{buildnumber}
 License: Proprietary
 Group: Networking/Utilities
-URL: http://www.ltop.org/
+URL: http://www.ntop.org/
 Source: n2disknt-%{version}.tgz
-Packager: Luca Deri <deri@ltop.org>
+Packager: Luca Deri <deri@ntop.org>
 # Temporary location where the RPM will be built
 BuildRoot:  %{_tmppath}/%{name}-%{version}-root
 Requires: pfring = @PFRING_VERSION@-@PFRING_SVN_RELEASE@ numactl
@@ -72,7 +72,7 @@ rm -fr $RPM_BUILD_ROOT
 %defattr(-, root, root)
 
 %changelog
-* Wed Feb 19 2014 Luca Deri <deri@ltop.org> 2.0
+* Wed Feb 19 2014 Luca Deri <deri@ntop.org> 2.0
 - Current package version
 
 

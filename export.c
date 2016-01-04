@@ -1,9 +1,9 @@
 /*
- *        lprobe - a Netflow v5/v9/IPFIX probe for IPv4/v6
+ *        nProbe - a Netflow v5/v9/IPFIX probe for IPv4/v6
  *
- *       Copyright (C) 2002-14 Luca Deri <deri@ltop.org>
+ *       Copyright (C) 2002-14 Luca Deri <deri@ntop.org>
  *
- *                     http://www.ltop.org/
+ *                     http://www.ntop.org/
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
  *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include "lprobe.h"
+#include "nprobe.h"
 
 #ifdef WIN32
 #define MSG_DONTWAIT 0
@@ -286,7 +286,7 @@ int exportBucketToNetflow(FlowHashBucket *myBucket,
     expireDate.tm_year = EXPIRE_YEAR-1900;
 
     if(time(NULL) > mktime(&expireDate)) {
-      traceEvent(TRACE_ERROR, "Sorry: this copy of lprobe is expired.\n");
+      traceEvent(TRACE_ERROR, "Sorry: this copy of nProbe is expired.\n");
       exit(0);
     }
   }
@@ -300,7 +300,7 @@ int exportBucketToNetflow(FlowHashBucket *myBucket,
 	traceEvent(TRACE_ERROR, "**************************************************************************\n");
 	traceEvent(TRACE_ERROR, "* NOTE: You have reached the max demo %d flows export: no more exports *\n",
 	       MAX_DEMO_FLOWS);
-	traceEvent(TRACE_ERROR, "* NOTE: no additional flows will be exported by this lprobe instance     *\n");
+	traceEvent(TRACE_ERROR, "* NOTE: no additional flows will be exported by this nProbe instance     *\n");
 	traceEvent(TRACE_ERROR, "**************************************************************************\n\n");
 	msg_shown = 1;
       }
@@ -916,7 +916,7 @@ static int sendFlowData(CollectorAddress *collector, char *buffer,
 
   /*
     This delay is used to slow down export rate as some
-    collectors might not be able to catch up with lprobe
+    collectors might not be able to catch up with nProbe
   */
   if(readOnlyGlobals.flowExportDelay > 0) {
 #ifndef WIN32
@@ -1093,7 +1093,7 @@ void sendNetFlow(void *buffer, u_int32_t bufferLength,
 		     inet_ntoa(readOnlyGlobals.netFlowDest[i].u.v4Address.sin_addr));
 	else
 	  traceEvent(TRACE_INFO, "Sent flow packet to [%s]",
-		     inet_ltop(AF_INET6, (void *)&(readOnlyGlobals.netFlowDest[i].u.IPAddress.ip),
+		     inet_ntop(AF_INET6, (void *)&(readOnlyGlobals.netFlowDest[i].u.IPAddress.ip),
 			       addrbuf, sizeof (addrbuf)));
 #endif /* DEBUG */
       }
@@ -1329,7 +1329,7 @@ void sendNetFlowV9V10(u_char lastFlow,
 	2) Counters (and I would argue totals) don't make sense as scope
 	3) if you send an options template there MUST be at least one scope field
 
-	Interim solution: we forget scope with IPFIX leaving it to a future lprobe release
+	Interim solution: we forget scope with IPFIX leaving it to a future nProbe release
       */
 
       if(numTemplatesSent == readOnlyGlobals.numActiveTemplates) {

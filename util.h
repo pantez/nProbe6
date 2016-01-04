@@ -1,9 +1,9 @@
 /* 
- *        lprobe - a Netflow v5/v9/IPFIX probe for IPv4/v6 
+ *        nProbe - a Netflow v5/v9/IPFIX probe for IPv4/v6 
  *
- *       Copyright (C) 2002-14 Luca Deri <deri@ltop.org> 
+ *       Copyright (C) 2002-14 Luca Deri <deri@ntop.org> 
  *
- *                     http://www.ltop.org/ 
+ *                     http://www.ntop.org/ 
  * 
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -83,13 +83,13 @@ void processEmailHeader(struct rfc822_info *info);
 void dumpRfc822Info(struct rfc822_info *info);
 
 #ifdef WIN32
-#define lprobe_sleep(a /* sec */) { waitForNextEvent(1000*a /* ms */); }
+#define nprobe_sleep(a /* sec */) { waitForNextEvent(1000*a /* ms */); }
 extern unsigned long waitForNextEvent(unsigned long ulDelay /* ms */);
 extern void initWinsock32();
 extern short isWinNT();
 #define close(fd) closesocket(fd)
 #else
-int lprobe_sleep(int secs);
+int nprobe_sleep(int secs);
 #endif
 
 extern void traceEvent(const int eventTraceLevel, const char* file, const int line, const char * format, ...);
@@ -126,7 +126,7 @@ extern void sanitizeV4Template(char *str);
 extern double toMs(struct timeval *t);
 extern u_int32_t msTimeDiff(struct timeval *end, struct timeval *begin);
 extern float timevalDiff(struct timeval *end, struct timeval *begin);
-extern unsigned int ltop_sleep(unsigned int secs);
+extern unsigned int ntop_sleep(unsigned int secs);
 extern FlowHashBucket* getListHead(FlowHashBucket **list);
 extern void addToList(FlowHashBucket *bkt, FlowHashBucket **list);
 extern void parseInterfaceAddressLists(char* _addresses);
@@ -170,7 +170,7 @@ extern void reset_bitmask(bitmask_selector *selector);
 extern int alloc_bitmask(u_int32_t tot_bits, bitmask_selector *selector);
 extern void free_bitmask(bitmask_selector *selector);
 
-/* lprobe.c */
+/* nprobe.c */
 extern void parseBlacklistNetworks(char* _addresses);
 extern u_short isBlacklistedAddress(struct in_addr *addr) ;
 

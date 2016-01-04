@@ -1,4 +1,4 @@
-                        ltop END USER LICENSE AGREEMENT
+                        NTOP END USER LICENSE AGREEMENT
 
 THIS "END USER LICENSE AGREEMENT" ("EULA") IS A BINDING LEGAL AGREEMENT. BY
 USING THE "SOFTWARES PROVIDED TOGETHER WITH THIS EULA" (THE "SOFTWARE"), OR
@@ -10,7 +10,7 @@ THE SOFTWARE AND YOUR USE OF ANY AUTHORIZATION CODE IS SUBJECT AT ALL TIMES TO
 THE TERMS AND CONDITIONS HERE, INCLUDING ALL PROVISIONS REGARDING THE
 LIMITATIONS OF THE LICENSOR LIABILITY.
 
-1. Grant of License in Favour of Registered Users. "ltop di Deri Luca"
+1. Grant of License in Favour of Registered Users. "NTOP di Deri Luca"
 ("Licensor") grants you a non-exclusive license to use the Software (including
 any updates of the Software that the Licensor may make available to you at his
 own discretion) and any "documentation files pertaining to the Software"
@@ -46,7 +46,7 @@ protection measure of the Software or assist third parties to do so.
 4. Confidentiality. You agree to maintain the confidentiality of Software and
 Documentation: you will not disclose Software or Documentation, or any
 information or materials related thereto, to any third party without the express
-written consent of ltop di Deri Luca. You further agree to take all reasonable
+written consent of NTOP di Deri Luca. You further agree to take all reasonable
 measures to limit access to Software and Documentation only to those of your
 employees who reasonably require such access to perform their employment
 obligations and who are bound by confidentiality agreements with you (in order

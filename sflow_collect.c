@@ -1,9 +1,9 @@
 /*
- *        lprobe - a Netflow v5/v9/IPFIX probe for IPv4/v6
+ *        nProbe - a Netflow v5/v9/IPFIX probe for IPv4/v6
  *
- *       Copyright (C) 2009-14 Luca Deri <deri@ltop.org>
+ *       Copyright (C) 2009-14 Luca Deri <deri@ntop.org>
  *
- *                     http://www.ltop.org/
+ *                     http://www.ntop.org/
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -21,12 +21,12 @@
  */
 
 /*
- *  ltop includes sFlow(TM), freely available from http://www.inmon.com/".
+ *  ntop includes sFlow(TM), freely available from http://www.inmon.com/".
  *
  * Some code has been copied from the InMon sflowtool
  */
 
-#include "lprobe.h"
+#include "nprobe.h"
 
 /* #define DEBUG_FLOWS */
 
@@ -3781,7 +3781,7 @@ static void handleSflowSample(SFSample *sample, int deviceId) {
 	       1 /* sampledPacket */,
 	       msk,
 	       sample->inputPort, sample->outputPort,
-	       ntohl(sample->sourceIP.s_addr), 0); /* Pass the packet to lprobe */
+	       ntohl(sample->sourceIP.s_addr), 0); /* Pass the packet to nProbe */
 
   if(readOnlyGlobals.enable_debug) readOnlyGlobals.datalink = tmp;
 }

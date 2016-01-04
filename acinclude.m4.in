@@ -1,11 +1,11 @@
 #
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# local automake definitions for ltop
+# local automake definitions for ntop
 ## (this file is processed with 'automake' to produce Makefile.in)
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 #
-# Copyright (c) 1998, 2000 Luca Deri <deri@ltop.org>
-# Updated 1Q 2000 Rocco Carbone <rocco@ltop.org>
+# Copyright (c) 1998, 2000 Luca Deri <deri@ntop.org>
+# Updated 1Q 2000 Rocco Carbone <rocco@ntop.org>
 #
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 #

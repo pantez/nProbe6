@@ -1,7 +1,7 @@
 /*
- *       Copyright (C) 2002-14 Luca Deri <deri@ltop.org>
+ *       Copyright (C) 2002-14 Luca Deri <deri@ntop.org>
  *
- *                     http://www.ltop.org/
+ *                     http://www.ntop.org/
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@
 
    ************************************************************************ */
 
-#include "lprobe.h"
+#include "nprobe.h"
 
 #define BLANK_SPACES               "                     "
 
@@ -218,7 +218,7 @@ static const struct option _long_options[] = {
     get a warning from the probe
   */
   { "nflite",                           required_argument, NULL, 250 /* dummy */ }, /* FIX Remove */
-  { "lprobe-version",                   required_argument, NULL, 252 /* dummy */ },
+  { "nprobe-version",                   required_argument, NULL, 252 /* dummy */ },
 
 #ifdef HAVE_LICENSE
   { "show-system-id",                   no_argument,       NULL,  252 /* dummy */ },
@@ -359,7 +359,7 @@ void reloadCLI(int signo) {
 void cleanup(int signo) {
   static u_char statsPrinted = 0;
 
-  if(!readOnlyGlobals.lprobe_up) exit(0);
+  if(!readOnlyGlobals.nprobe_up) exit(0);
 
   if(!statsPrinted) {
     statsPrinted = 1;
@@ -367,11 +367,11 @@ void cleanup(int signo) {
     dumpCacheStats(0);
   }
 
-  readOnlyGlobals.lprobe_up = 0;
+  readOnlyGlobals.nprobe_up = 0;
   readWriteGlobals->shutdownInProgress = 1;
   traceEvent(TRACE_NORMAL, "Received shutdown request...");
 
-  /* shutdown_lprobe(); */
+  /* shutdown_nprobe(); */
   /* exit(0); */
 }
 #endif
@@ -468,7 +468,7 @@ static void* printThroughputStats(void* notUsed) {
 
     theTime = readWriteGlobals->now = time(NULL);
     printSingleThroughputTime(theTime);
-    ltop_sleep(1);
+    ntop_sleep(1);
   }
 
   closeThroughputStatsDump();
@@ -915,7 +915,7 @@ static void deepPacketDecode(u_short thread_id,
 			 than the first one */
 		      return;
 		    } else if(last_fragment == 0) /* && (first_fragment == 1) */ {
-		      /* In this case we tell lprobe not to consider as length the one
+		      /* In this case we tell nProbe not to consider as length the one
 			 reported in the h header, but rather then one we take from
 			 tunneled IP as we do not rebuild fully the packet payload yes */
 		      overwrite_packet_lenght = 1;
@@ -1534,7 +1534,7 @@ int isGoodLicense(char **rcmsg) {
     char msg[512];
     extern VOID AddToMessageLog(LPTSTR lpszMsg);
 
-    snprintf(msg, sizeof(msg), "Invalid or missing lprobe License file %s [%s]",
+    snprintf(msg, sizeof(msg), "Invalid or missing nProbe License file %s [%s]",
 	     license_path, rcmsg);
     AddToMessageLog(TEXT(msg));
 #endif
@@ -1550,10 +1550,10 @@ int isGoodLicense(char **rcmsg) {
 void probeVersion(void) {
   char *sysId, *msg;
 
-  printf("\nWelcome to lprobe v.%s (%s) for %s\n"
+  printf("\nWelcome to nprobe v.%s (%s) for %s\n"
 	 "%s\n"
-	 "Copyright 2002-14 ltop.org\n",
-	 version, lprobe_revision, osName,
+	 "Copyright 2002-14 ntop.org\n",
+	 version, nprobe_revision, osName,
 #ifdef HAVE_PF_RING
 	 "with native PF_RING acceleration.\n"
 #else
@@ -1566,13 +1566,13 @@ void probeVersion(void) {
   free(sysId);
 
   if(!isGoodLicense(&msg)) {
-    printf("WARNING: Invalid lprobe license ("
+    printf("WARNING: Invalid nProbe license ("
 #ifndef WIN32
 	   "/etc/"
 #endif
 	   LICENSE_FILE_NAME") [%s]\n", msg);
   } else {
-    printf("Valid lprobe license found\n");
+    printf("Valid nProbe license found\n");
   }
 #endif
 }
@@ -1588,7 +1588,7 @@ void usage(u_int8_t long_help) {
 
   printf("\nUsage:\n");
 
-  printf("lprobe -n <host:port|none> [-i <interface|dump file>] [-t <lifetime timeout>]\n"
+  printf("nprobe -n <host:port|none> [-i <interface|dump file>] [-t <lifetime timeout>]\n"
 	 "              [-d <idle timeout>] [-l <queue timeout>] [-s <snaplen>]\n"
 	 "              [-p <aggregation>] [-f <filter>] [-a] [-b <level>]"
 #ifndef WIN32
@@ -1749,7 +1749,7 @@ void usage(u_int8_t long_help) {
 	 "                                    |     flows with unknown protos)\n"
      "                                    | 2 - Export only unknown flows (discard\n"
 	 "                                    |     flows with known protos)\n");
-  printf("[--lprobe-version|-v]               | Prints the program version.\n");
+  printf("[--nprobe-version|-v]               | Prints the program version.\n");
   printf("[--flow-lock|-C] <flow lock>        | If the flow lock file is present no flows\n"
 	 "                                    | are emitted. This facility is useful to\n"
 	 "                                    | implement high availability by means of\n"
@@ -1766,7 +1766,7 @@ void usage(u_int8_t long_help) {
 #endif
   printf("--json-labels                       | In case JSON label is used (e.g. with ZMQ)\n"
 	 "                                    | labels instead of numbers are used as keys.\n");
-  printf("--quick-mode                        | Micro-lprobe: use if need speed\n"
+  printf("--quick-mode                        | Micro-nprobe: use if need speed\n"
      	 "                                    | and do not need advanced traffic analysis.\n");
   printf("--fake-capture                      | Fake packet capture (development only).\n");
   printf("--dont-nest-dump-dirs               | Dump files won't be saved on nested dirs.\n");
@@ -1802,7 +1802,7 @@ void usage(u_int8_t long_help) {
 
   printf("[--max-num-flows|-M] <max num flows>| Limit the number of active flows. This is\n"
          "                                    | useful if you want to limit the memory\n"
-	 "                                    | or CPU allocated to lprobe in case of non\n"
+	 "                                    | or CPU allocated to nProbe in case of non\n"
 	 "                                    | well-behaved applications such as\n"
 	 "                                    | worms or DoS. [default=%u]\n",
 	 readOnlyGlobals.maxNumActiveFlows);
@@ -1823,7 +1823,7 @@ void usage(u_int8_t long_help) {
   printf("[--sample-rate|-S] <pkt rate>:<flow rate>\n"
 	 "                                    | Packet capture sampling rate and flow\n"
 	 "                                    | sampling rate. If <pkt rate> starts with\n"
-	 "                                    | '@' it means that lprobe will report\n"
+	 "                                    | '@' it means that nprobe will report\n"
 	 "                                    | the specified sampling rate but will\n"
 	 "                                    | not sample itself as incoming packets\n"
 	 "                                    | are already sampled on the specified\n"
@@ -1832,7 +1832,7 @@ void usage(u_int8_t long_help) {
   printf("[--as-list|-A] <AS list>            | GeoIP file containing with known ASs.\n"
 	 "                                    | Example: GeoIPASNum.dat\n");
   printf("--city-list <city list>             | GeoIP file containing the city/IP mapping.\n"
-	 "                                    | Note that lprobe will load the IPv6 file\n"
+	 "                                    | Note that nProbe will load the IPv6 file\n"
 	 "                                    | equivalent if present. Example:\n"
 	 "                                    | --city-list GeoLiteCity.dat will also\n"
 	 "                                    | attempt to load GeoLiteCityv6.dat\n");
@@ -1937,11 +1937,11 @@ void usage(u_int8_t long_help) {
   printf("--enable-throughput-stats           | Compute throughput stats that can be dumped when -P is used\n");
   printf("--ndpi-proto-ports <file>           | Read custom ports definitions for nDPI (see nDPI/example/protos.txt)\n");
   printf("--disable-l7-protocol-guess         | When nDPI is enabled, in case a protocol is not recognized,\n"
-	 "                                    | lprobe guesses the protocol based on ports. This option disables\n"
+	 "                                    | nProbe guesses the protocol based on ports. This option disables\n"
  	 "                                    | this feature and uses only strict payload dissection\n");
   printf("--original-speed                    | When using -i with a pcap file, instead of reading packets\n"
 	 "                                    | as fast as possible, the original speed is preserved (debug only)\n");
-  printf("--dont-reforge-timestamps           | Disable lprobe to reforge timestamps with -i <pcap file> (debug only)\n");
+  printf("--dont-reforge-timestamps           | Disable nProbe to reforge timestamps with -i <pcap file> (debug only)\n");
   printf("--db-engine <database engine>       | Define the DB engine type (example MyISAM, InfiniDB).\n"
 	 "                                    | This information is used by the database plugin.\n"
 	 "                                    | Default %s.\n", readOnlyGlobals.dbEngineType);
@@ -1956,7 +1956,7 @@ void usage(u_int8_t long_help) {
 	 "                                    | Example --redis localhost\n");
   printf("--use-redis-proxy                   | Use a redis proxy (e.g.\n"
 	 "                                    | https://github.com/twitter/twemproxy)\n");
-  printf("--ucloud                            | Enable the lprobe micro-cloud\n");
+  printf("--ucloud                            | Enable the nProbe micro-cloud\n");
 #endif
 
 #ifdef HAVE_LICENSE
@@ -2008,10 +2008,10 @@ void usage(u_int8_t long_help) {
 
   /* ************************************************ */
 
-  printf("\nExample: lprobe -T \"%s\"\n", DEFAULT_V9_IPV4_TEMPLATE);
+  printf("\nExample: nprobe -T \"%s\"\n", DEFAULT_V9_IPV4_TEMPLATE);
 
   printf("\n");
-  printf("lprobe shut down\n");
+  printf("nProbe shut down\n");
 
   exit(0);
 }
@@ -2513,7 +2513,7 @@ int initNetFlow(char* addr, int port) {
     if(readOnlyGlobals.netFlowDest[readOnlyGlobals.numCollectors].isIPv6) {
       char col[100];
 
-      inet_ltop(AF_INET6, &readOnlyGlobals.netFlowDest[readOnlyGlobals.numCollectors].u.v6Address, col, sizeof(col));
+      inet_ntop(AF_INET6, &readOnlyGlobals.netFlowDest[readOnlyGlobals.numCollectors].u.v6Address, col, sizeof(col));
       rc = connect(readOnlyGlobals.netFlowDest[readOnlyGlobals.numCollectors].sockFd,
 		   (struct sockaddr *)&readOnlyGlobals.netFlowDest[readOnlyGlobals.numCollectors].u.v6Address,
 		   sizeof(readOnlyGlobals.netFlowDest[readOnlyGlobals.numCollectors].u.v6Address));
@@ -2778,7 +2778,7 @@ static int parseOptions(int argc, char* argv[], u_int8_t reparse_options) {
       exit(-1);
     }
 
-    readOnlyGlobals.argv[readOnlyGlobals.argc++] = strdup("lprobe");
+    readOnlyGlobals.argv[readOnlyGlobals.argc++] = strdup("nprobe");
 
     while(cont && fgets(line, sizeof(line), fd)) {
       /* printf("line='%s'\n", line); */
@@ -2841,7 +2841,7 @@ static int parseOptions(int argc, char* argv[], u_int8_t reparse_options) {
     if(reparse_options) {
       traceEvent(TRACE_WARNING, "Command line options can be reloaded only when");
       traceEvent(TRACE_WARNING, "the probe is started from a configuration file");
-      traceEvent(TRACE_WARNING, "Please use lprobe <configuration file>");
+      traceEvent(TRACE_WARNING, "Please use nprobe <configuration file>");
       return(-1);
     }
 
@@ -3356,11 +3356,11 @@ static int parseOptions(int argc, char* argv[], u_int8_t reparse_options) {
 #ifndef WIN32
     case 'I':
       {
-	u_int len = strlen(optarg), max_len = sizeof(readOnlyGlobals.lprobeId)-1;
+	u_int len = strlen(optarg), max_len = sizeof(readOnlyGlobals.nprobeId)-1;
 
 	if(len >= max_len) len = max_len;
-	strncpy(readOnlyGlobals.lprobeId, optarg, len);
-	readOnlyGlobals.lprobeId[len] = '\0';
+	strncpy(readOnlyGlobals.nprobeId, optarg, len);
+	readOnlyGlobals.nprobeId[len] = '\0';
 	readOnlyGlobals.useSyslog = 1;
       }
       break;
@@ -3519,7 +3519,7 @@ static int parseOptions(int argc, char* argv[], u_int8_t reparse_options) {
       if((readOnlyGlobals.netFlowVersion != 5)
 	 && (readOnlyGlobals.netFlowVersion != 9)
 	 && (readOnlyGlobals.netFlowVersion != 10)) {
-	traceEvent(TRACE_ERROR, "lprobe supports 5 (NetFlow 5), 9 (NetFlow 9) and 10 (IPFIX)");
+	traceEvent(TRACE_ERROR, "nProbe supports 5 (NetFlow 5), 9 (NetFlow 9) and 10 (IPFIX)");
 	exit(0);
       }
       break;
@@ -3882,8 +3882,8 @@ static int parseOptions(int argc, char* argv[], u_int8_t reparse_options) {
     traceEvent(TRACE_WARNING, "--disable-cache can be used only in collection mode and with -i none: disabled");
   }
 
-  traceEvent(TRACE_NORMAL, "Welcome to lprobe v.%s (%s) for %s %s",
-	     version, lprobe_revision, osName,
+  traceEvent(TRACE_NORMAL, "Welcome to nprobe v.%s (%s) for %s %s",
+	     version, nprobe_revision, osName,
 #ifdef HAVE_PF_RING
 	     "with native PF_RING acceleration"
 #else
@@ -3895,19 +3895,19 @@ static int parseOptions(int argc, char* argv[], u_int8_t reparse_options) {
   {
     char *sysId = getSystemId();
 
-    traceEvent(TRACE_NORMAL, "lprobe SystemId: %s", sysId);
+    traceEvent(TRACE_NORMAL, "nProbe SystemId: %s", sysId);
     free(sysId);
   }
 #endif
 
-  if(((fd = fopen("lprobe.license", "r")) != NULL)
-     || ((fd = fopen("/etc/lprobe.license", "r")) != NULL)) {
+  if(((fd = fopen("nprobe.license", "r")) != NULL)
+     || ((fd = fopen("/etc/nprobe.license", "r")) != NULL)) {
     char license[256] = { 0 }, *ret;
 
     ret = fgets(license, sizeof(license), fd);
     fclose(fd);
 
-    traceEvent(TRACE_NORMAL, "lprobe License:  %s", license);
+    traceEvent(TRACE_NORMAL, "nProbe License:  %s", license);
   }
 
   if(readOnlyGlobals.traceMode) traceEvent(TRACE_INFO, "Tracing enabled");
@@ -4008,7 +4008,7 @@ static void stopCaptureFlushAll(void) {
   u_int hash_idx = 0;
 
   readWriteGlobals->stopPacketCapture = 1;
-  traceEvent(TRACE_INFO, "lprobe is shutting down...");
+  traceEvent(TRACE_INFO, "nProbe is shutting down...");
 
 #ifdef HAVE_PF_RING
   if(readWriteGlobals->ring) {
@@ -4055,7 +4055,7 @@ static void stopCaptureFlushAll(void) {
 
     while(readWriteGlobals->exportBucketsLen > 0) {
       signalCondvar(&readWriteGlobals->exportQueueCondvar, 0);
-      ltop_sleep(1);
+      ntop_sleep(1);
 
       if(readWriteGlobals->exportBucketsLen > 0)
 	traceEvent(TRACE_NORMAL, "Still %d queued buckets to be exported...",
@@ -4119,7 +4119,7 @@ void term_pcap(pcap_t **p) {
 
 /* ****************************************************** */
 
-void shutdown_lprobe(void) {
+void shutdown_nprobe(void) {
   static u_char once = 0;
   FlowHashBucket *list;
   u_int i;
@@ -4128,7 +4128,7 @@ void shutdown_lprobe(void) {
 
   stopCaptureFlushAll();
 
-  // ltop_sleep(1);
+  // ntop_sleep(1);
   signalCondvar(&readWriteGlobals->exportQueueCondvar, 0);
 
   if(readOnlyGlobals.dequeueBucketToExport_up)
@@ -4261,8 +4261,8 @@ void shutdown_lprobe(void) {
   }
 #endif
 
-  traceEvent(TRACE_INFO, "lprobe terminated.");
-  dumpLogEvent(probe_stopped, severity_info, "lprobe stopped");
+  traceEvent(TRACE_INFO, "nProbe terminated.");
+  dumpLogEvent(probe_stopped, severity_info, "nProbe stopped");
   if(readOnlyGlobals.eventLogPath) free(readOnlyGlobals.eventLogPath);
 
   if(readOnlyGlobals.dumpBadPacketsPcap)
@@ -4474,7 +4474,7 @@ static int openDevice(char ebuf[], int printErrors, char *pcapFilePath) {
 #ifndef WIN32
 	  if((getuid () && geteuid ()) || setuid (0)) {
 	    if(printErrors) {
-	      traceEvent(TRACE_ERROR, "lprobe opens the network interface "
+	      traceEvent(TRACE_ERROR, "nProbe opens the network interface "
 			 "in promiscuous mode, ");
 	      traceEvent(TRACE_ERROR, "so it needs root permission "
 			 "to run. Quitting...");
@@ -4548,7 +4548,7 @@ static int restoreInterface(char ebuf[]) {
     traceEvent(TRACE_INFO, "Waiting until the interface comes back...");
 
     while(rc == -1) {
-      ltop_sleep(1);
+      ntop_sleep(1);
       rc = openDevice(ebuf, 0, NULL);
     }
 
@@ -5221,7 +5221,7 @@ static void compileTemplates(u_int8_t reloadTemplate) {
 
     /*
       Dummy calls for enabling all plugins: their values will be overwritten
-      but they are functional to lprobe
+      but they are functional to nProbe
     */
     readOnlyGlobals.templateBuffers[V4_TEMPLATE_INDEX].templatePlugin =
       compileTemplate(readOnlyGlobals.stringTemplateV4,
@@ -5367,8 +5367,8 @@ static void compileTemplates(u_int8_t reloadTemplate) {
 	  if(readOnlyGlobals.traceMode == 2)
 	    traceEvent(TRACE_INFO, "Found %20s [num %d][id %d][%d bytes][total %d bytes]",
 		       elems[i]->netflowElementName, ++elId,
-		       (elems[i]->templateElementEnterpriseId == ltop_ENTERPRISE_ID)
-		       ? elems[i]->templateElementId-ltop_BASE_ID : elems[i]->templateElementId,
+		       (elems[i]->templateElementEnterpriseId == NTOP_ENTERPRISE_ID)
+		       ? elems[i]->templateElementId-NTOP_BASE_ID : elems[i]->templateElementId,
 		       elems[i]->templateElementLen, tot);
 	} else
 	  break;
@@ -5471,7 +5471,7 @@ static void compileTemplates(u_int8_t reloadTemplate) {
 
   if(reloadTemplate) {
     readWriteGlobals->stopPacketCapture = 0;
-    traceEvent(TRACE_INFO, "lprobe is now operational...");
+    traceEvent(TRACE_INFO, "nProbe is now operational...");
   }
 
   free(baseTempleteBufferV4);
@@ -5585,7 +5585,7 @@ static void* printPeriodicStats(void* notUsed) {
   to_sleep = sleep_duration;
 
   while(!readWriteGlobals->shutdownInProgress) {
-    ltop_sleep(1);
+    ntop_sleep(1);
 
     if(to_sleep == sleep_duration) {
 #ifdef HAVE_REDIS
@@ -5632,7 +5632,7 @@ static void* printPeriodicStats(void* notUsed) {
 
 int
 #ifdef WIN32
-lprobe_main
+nprobe_main
 #else
 main
 #endif
@@ -5670,7 +5670,7 @@ main
     } else if((argc == 2) && (!strcmp(argv[1], "--show-system-id"))) {
       printf("%s\n", getSystemId());
       exit(0);
-    } else if((argc == 2) && (!strcmp(argv[1], "--lprobe-version"))) {
+    } else if((argc == 2) && (!strcmp(argv[1], "--nprobe-version"))) {
       printf("%s\n", version);
       exit(0);
     } else if((argc == 2) && (!strcmp(argv[1], "--dump-plugin-families"))) {
@@ -5696,8 +5696,8 @@ main
       readOnlyGlobals.demo_mode = 1;
     } else {
 #if 0
-      if((num_instances = verify_application_instances("lprobe", out_buf, sizeof(out_buf))) != 0) {
-	traceEvent(TRACE_ERROR, "Too many lprobe instances (%d) running", num_instances);
+      if((num_instances = verify_application_instances("nprobe", out_buf, sizeof(out_buf))) != 0) {
+	traceEvent(TRACE_ERROR, "Too many nProbe instances (%d) running", num_instances);
 	/* exit(-1); */
 	readOnlyGlobals.demo_mode = 1;
       }
@@ -5714,7 +5714,7 @@ main
       char *sysId;
 #endif
 
-      traceEvent(TRACE_ERROR, "Invalid lprobe license"
+      traceEvent(TRACE_ERROR, "Invalid nProbe license"
 #ifndef USE_SPARROW
 		 " ("
 #ifndef WIN32
@@ -5733,12 +5733,12 @@ main
       traceEvent(TRACE_ERROR, "**                                               **");
       traceEvent(TRACE_ERROR, "**  Switching to DEMO MODE due to license error  **");
       traceEvent(TRACE_ERROR, "**                                               **");
-      traceEvent(TRACE_ERROR, "**  Create your lprobe license at                **");
+      traceEvent(TRACE_ERROR, "**  Create your nProbe license at                **");
       traceEvent(TRACE_ERROR, "**       http://www.nmon.net/mklicense/          **");
       traceEvent(TRACE_ERROR, "**                                               **");
       traceEvent(TRACE_ERROR, "***************************************************");
     } else
-      traceEvent(TRACE_NORMAL, "Valid lprobe license found");
+      traceEvent(TRACE_NORMAL, "Valid nProbe license found");
 
     /* restore values */
     optind=t_optind, opterr=t_opterr, optopt=t_optopt;
@@ -5746,7 +5746,7 @@ main
     demo_mode = readOnlyGlobals.demo_mode;
   }
 #else
-  if((argc == 2) && (!strcmp(argv[1], "--lprobe-version"))) {
+  if((argc == 2) && (!strcmp(argv[1], "--nprobe-version"))) {
     printf("%s\n", version);
     exit(0);
   }
@@ -5774,12 +5774,12 @@ main
   // readOnlyGlobals.traceMode = 2, traceLevel = 5; // FIX
   initPlugins();
 
-  traceEvent(TRACE_NORMAL, "Welcome to lprobe v.%s for %s", version, osName);
+  traceEvent(TRACE_NORMAL, "Welcome to nprobe v.%s for %s", version, osName);
   printCopyrights();
 
 #ifndef WIN32
   if(readOnlyGlobals.useSyslog)
-    openlog(readOnlyGlobals.lprobeId, LOG_PID ,LOG_DAEMON);
+    openlog(readOnlyGlobals.nprobeId, LOG_PID ,LOG_DAEMON);
 #endif
 
   memset(&readWriteGlobals->theFlowHash, 0, sizeof(readWriteGlobals->theFlowHash));
@@ -6091,14 +6091,14 @@ main
   if(readOnlyGlobals.tunnel_mode)
     traceEvent(TRACE_NORMAL, "Enabled tunnel decoding (e.g. IPSEC/GTP)");
 
-  readOnlyGlobals.lprobe_up = 1;
+  readOnlyGlobals.nprobe_up = 1;
 
 #ifdef HAVE_ZMQ
 #ifndef WIN32
   if(readOnlyGlobals.zmq.endpoint != NULL) {
     readOnlyGlobals.zmq.daemon = readOnlyGlobals.becomeDaemon;
     
-    /* If lprobe will be daemon, the zmq socket must be initialize after that the daemon process will be finished. */
+    /* If nprobe will be daemon, the zmq socket must be initialize after that the daemon process will be finished. */
     if(!readOnlyGlobals.becomeDaemon)
       initZMQ();
   }
@@ -6113,12 +6113,12 @@ main
   if((readOnlyGlobals.pcapFile == NULL) && (!readOnlyGlobals.enableNfLitePlugin)) {
     /* Change user-id then save the pid path */
 #ifndef WIN32
-    readOnlyGlobals.lprobePid = getpid();
+    readOnlyGlobals.nprobePid = getpid();
 
     if(readOnlyGlobals.pidPath) {
       FILE *fd = fopen(readOnlyGlobals.pidPath, "w");
       if(fd != NULL) {
-	fprintf(fd, "%lu\n", readOnlyGlobals.lprobePid);
+	fprintf(fd, "%lu\n", readOnlyGlobals.nprobePid);
 	fclose(fd);
       } else
 	traceEvent(TRACE_ERROR, "Unable to store PID in file %s",
@@ -6137,7 +6137,7 @@ main
     setupPlugins();
   }
 
-  dumpLogEvent(probe_started, severity_info, "lprobe started");
+  dumpLogEvent(probe_started, severity_info, "nProbe started");
 
   if(readOnlyGlobals.enable_l7_protocol_discovery)
    initL7Discovery();
@@ -6180,7 +6180,7 @@ main
 
     if(unlikely(readOnlyGlobals.enable_debug)) {
       traceEvent(TRACE_WARNING, "*****************************************");
-      traceEvent(TRACE_WARNING, "** You're running lprobe in DEBUG mode **");
+      traceEvent(TRACE_WARNING, "** You're running nprobe in DEBUG mode **");
       traceEvent(TRACE_WARNING, "*****************************************");
     }
 
@@ -6298,15 +6298,15 @@ main
 
     traceEvent(TRACE_INFO, "No more packets to read. Sleeping...\n");
 
-    // while(1) ltop_sleep(999); /* Sleep forever */
+    // while(1) ntop_sleep(999); /* Sleep forever */
   } else {
-    while(readOnlyGlobals.lprobe_up) {
+    while(readOnlyGlobals.nprobe_up) {
       // sleep(5); break;
-      ltop_sleep(1);
+      ntop_sleep(1);
     }
   }
 
-  shutdown_lprobe();
+  shutdown_nprobe();
 
   return(0);
 }

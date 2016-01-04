@@ -1,11 +1,11 @@
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# auto makefile for the lprobe
+# auto makefile for the nprobe
 # (this file is processed with 'automake' to produce Makefile.in)
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 #
-#       Copyright (C) 2002-13 Luca Deri <deri@ltop.org> 
+#       Copyright (C) 2002-13 Luca Deri <deri@ntop.org> 
 #
-#                     http://www.ltop.org/ 
+#                     http://www.ntop.org/ 
 # 
 #  This program is free software; you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ PROGRAM  = @PACKAGE_NAME@
 
 PLATFORM =`uname -p`
 
-APPL= lprobe
+APPL= nprobe
 REVISION=`svn info . | grep "^Revision"|cut -d " " -f 2`
 PACKAGE=$(APPL)-@PACKAGE_VERSION@-$(REVISION).$(PLATFORM).rpm
 PKGNAME  = @PACKAGE_NAME@
@@ -49,37 +49,37 @@ CCLD      = @CCLD@
 AM_CFLAGS = @CFLAGS@
 AM_LDFLAGS= @LDFLAGS@
 
-DISTCLEANFILES =  *~ *.log *.lo *.so *.o $(APPL) @PLUGINS@/*.o @PLUGINS@/*.lo  @PLUGINS@/*~ @PLUGINS@/*.so @PLUGINS@/*.la ./private/dmidecode-2.9/*.[oa~] .libs @PLUGINS@/.libs @USE_LICENSE@ lprobes
+DISTCLEANFILES =  *~ *.log *.lo *.so *.o $(APPL) @PLUGINS@/*.o @PLUGINS@/*.lo  @PLUGINS@/*~ @PLUGINS@/*.so @PLUGINS@/*.la ./private/dmidecode-2.9/*.[oa~] .libs @PLUGINS@/.libs @USE_LICENSE@ nprobes
 CLEANFILES     = $(DISTCLEANFILES)
 
 SUBDIRS = . @PLUGINS@
 
-PKG=lprobe-$(PACKAGE_VERSION)-$(REVISION).$(PLATFORM).rpm
+PKG=nProbe-$(PACKAGE_VERSION)-$(REVISION).$(PLATFORM).rpm
 N2DISK_PKG=n2disk-$(N2DISK_PACKAGE_VERSION)-$(REVISION).$(PLATFORM).rpm
 N2DISKNT_PKG=n2disknt-$(N2DISK_PACKAGE_VERSION)-$(REVISION).$(PLATFORM).rpm
 
-bin_PROGRAMS = lprobe
+bin_PROGRAMS = nprobe
 
-# lprobe
-lprobe_SOURCES = lprobe.c
-lprobe_DEPENDENCIES = liblprobe.la
-lprobe_LDADD = liblprobe.la
-lprobe_LDFLAGS = $(AM_LDFLAGS) -pthread -lm
-lprobe_CFLAGS =
+# nprobe
+nprobe_SOURCES = nprobe.c
+nprobe_DEPENDENCIES = libnprobe.la
+nprobe_LDADD = libnprobe.la
+nprobe_LDFLAGS = $(AM_LDFLAGS) -pthread -lm
+nprobe_CFLAGS =
 
-lib_LTLIBRARIES = liblprobe.la
+lib_LTLIBRARIES = libnprobe.la
 
-# lprobe core library
+# nprobe core library
 
 #
 # On old systems getopt might be undefined
 #
 GETOPT_FILES=#getopt1.c getopt.c
-liblprobe_la_SOURCES = cache.c collect.c engine.c export.c database.c \
+libnprobe_la_SOURCES = cache.c collect.c engine.c export.c database.c \
 		       $(GETOPT_FILES) globals.c plugin.c template.c \
 		       sflow_collect.c util.c version.c systemId.c $(PF_RING)
-liblprobe_la_LDFLAGS = $(AM_LDFLAGS) -release $(VERSION) -export-dynamic @DYN_FLAGS@
-liblprobe_la_DEPENDENCIES = @USE_LICENSE@
+libnprobe_la_LDFLAGS = $(AM_LDFLAGS) -release $(VERSION) -export-dynamic @DYN_FLAGS@
+libnprobe_la_DEPENDENCIES = @USE_LICENSE@
 
 private/license/liblicense.a:
 	cd private/license; make
@@ -93,29 +93,29 @@ private/license/liblicense.a:
 #	gcc $(CFLAGS) -I@HERE@ @PIC@ -c systemId.c
 
 cleanup-rpm:
-	rm -rf $(HOME)/rpmbuild/BUILD/lprobe* $(HOME)/rpmbuild/SOURCES/lprobe*
+	rm -rf $(HOME)/rpmbuild/BUILD/nprobe* $(HOME)/rpmbuild/SOURCES/nProbe*
 
 cleanup-n2disk-rpm:
-	rm -rf $(HOME)/rpmbuild/BUILD/n2disk* $(HOME)/rpmbuild/SOURCES/lprobe*
+	rm -rf $(HOME)/rpmbuild/BUILD/n2disk* $(HOME)/rpmbuild/SOURCES/nProbe*
 
-build-rpm: build-lprobe-rpm build-n2disk-rpm
+build-rpm: build-nprobe-rpm build-n2disk-rpm
 
-build-lprobe-rpm: cleanup-rpm maketarproplugins datfiles $(APPL)
+build-nprobe-rpm: cleanup-rpm maketarproplugins datfiles $(APPL)
 # Do NOT build package as root (http://wiki.centos.org/HowTos/SetupRpmBuildEnvironment)
 #	mkdir -p $(HOME)/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 #	echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
-	-rm -rf lprobe-@PACKAGE_VERSION@
-	cp -rf lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins lprobe-@PACKAGE_VERSION@
-	mkdir -p lprobe-@PACKAGE_VERSION@/packages
-	cp packages/*.spec.in lprobe-@PACKAGE_VERSION@/packages
-	cp -rf pro lprobe-@PACKAGE_VERSION@
-	cp -rf private lprobe-@PACKAGE_VERSION@
-	cp *.dat COPYING LICENSE EULA.txt lprobe-@PACKAGE_VERSION@
+	-rm -rf nProbe-@PACKAGE_VERSION@
+	cp -rf nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins nProbe-@PACKAGE_VERSION@
+	mkdir -p nProbe-@PACKAGE_VERSION@/packages
+	cp packages/*.spec.in nProbe-@PACKAGE_VERSION@/packages
+	cp -rf pro nProbe-@PACKAGE_VERSION@
+	cp -rf private nProbe-@PACKAGE_VERSION@
+	cp *.dat COPYING LICENSE EULA.txt nProbe-@PACKAGE_VERSION@
 	cp plugins/bgpPlugin.c plugins/dbPlugin.c plugins/dnsPlugin.c \
 	plugins/httpPlugin.c plugins/mysqlPlugin.c plugins/nflitePlugin.c \
 	plugins/rtpPlugin.c plugins/sipPlugin.c plugins/smtpPlugin.c \
-	plugins/radiusPlugin.c plugins/gtpv1Plugin.c plugins/gtpv0Plugin.c plugins/gtpv2Plugin.c lprobe-@PACKAGE_VERSION@/plugins
-	tar cvfz $(HOME)/rpmbuild/SOURCES/lprobe-@PACKAGE_VERSION@.tgz lprobe-@PACKAGE_VERSION@
+	plugins/radiusPlugin.c plugins/gtpv1Plugin.c plugins/gtpv0Plugin.c plugins/gtpv2Plugin.c nProbe-@PACKAGE_VERSION@/plugins
+	tar cvfz $(HOME)/rpmbuild/SOURCES/nProbe-@PACKAGE_VERSION@.tgz nProbe-@PACKAGE_VERSION@
 	@rm -f $(HOME)/rpmbuild/RPMS/$(PLATFORM)/$(PKG)
 	@cp $(APPL) $(HOME)/rpmbuild/BUILD
 	@rpmbuild -bb ./packages/$(APPL).spec --define "buildnumber $(REVISION)"
@@ -130,7 +130,7 @@ build-n2disk-rpm: maketarproplugins
 #	mkdir -p $(HOME)/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 #	echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
 	\/bin/rm -rf n2disk-@N2DISK_PACKAGE_VERSION@
-	cp -rf lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins n2disk-@N2DISK_PACKAGE_VERSION@
+	cp -rf nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins n2disk-@N2DISK_PACKAGE_VERSION@
 	mkdir -p n2disk-@N2DISK_PACKAGE_VERSION@/packages
 	cp packages/*.spec.in n2disk-@N2DISK_PACKAGE_VERSION@/packages
 	cp -rf pro n2disk-@N2DISK_PACKAGE_VERSION@
@@ -150,7 +150,7 @@ build-n2disknt-rpm: maketarproplugins
 #	mkdir -p $(HOME)/rpmbuild/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 #	echo '%_topdir %(echo $HOME)/rpmbuild' > ~/.rpmmacros
 	\/bin/rm -rf n2disknt-@N2DISK_PACKAGE_VERSION@
-	cp -rf lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins n2disknt-@N2DISK_PACKAGE_VERSION@
+	cp -rf nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins n2disknt-@N2DISK_PACKAGE_VERSION@
 	mkdir -p n2disknt-@N2DISK_PACKAGE_VERSION@/packages
 	cp packages/*.spec.in n2disknt-@N2DISK_PACKAGE_VERSION@/packages
 	cp -rf pro n2disknt-@N2DISK_PACKAGE_VERSION@
@@ -163,9 +163,9 @@ build-n2disknt-rpm: maketarproplugins
 	@echo "Package contents:"
 	@rpm -qpl $(HOME)/rpmbuild/RPMS/$(PLATFORM)/$(N2DISKNT_PKG)
 	@echo "The package is now available in $(HOME)/rpmbuild/RPMS/$(PLATFORM)/$(N2DISKNT_PKG)"
-	-rm -rf lprobe-@N2DISK_PACKAGE_VERSION@ lprobe_@N2DISK_PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins.tgz
+	-rm -rf nProbe-@N2DISK_PACKAGE_VERSION@ nprobe_@N2DISK_PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins.tgz
 
-CLEANLIST = `ls -l $(DESTDIR)$(libdir)/*lprobe*.so $(DESTDIR)$(libdir)/*Plugin*.so | \
+CLEANLIST = `ls -l $(DESTDIR)$(libdir)/*nprobe*.so $(DESTDIR)$(libdir)/*Plugin*.so | \
           grep -v $(VERSION) | \
           grep -v '\->' | \
           $(AWK) '{ print $$NF }'`
@@ -209,224 +209,224 @@ libclean:
 clean:
 	/bin/rm -rf $(CLEANFILES)
 
-lprobes: $(lprobe_OBJECTS) $(lprobe_DEPENDENCIES)
+nprobes: $(nprobe_OBJECTS) $(nprobe_DEPENDENCIES)
 	cd plugins;make
-#	$(CC) -static *.o plugins/*.o -o lprobes  -lpcap -lpthread -ldl $(LIBS)
-	$(CC)  *.o plugins/*.o -o lprobes -lpthread -ldl -lresolv -ldl -lpthread -L./private/license -llicense $(LIBS) @NDPI_LIB@ $(HOME)/PF_RING/userland/libpcap/libpcap.a $(HOME)/PF_RING/userland/lib/libpfring.a
+#	$(CC) -static *.o plugins/*.o -o nprobes  -lpcap -lpthread -ldl $(LIBS)
+	$(CC)  *.o plugins/*.o -o nprobes -lpthread -ldl -lresolv -ldl -lpthread -L./private/license -llicense $(LIBS) @NDPI_LIB@ $(HOME)/PF_RING/userland/libpcap/libpcap.a $(HOME)/PF_RING/userland/lib/libpfring.a
 
 ############
 
 SVN_RELEASE=svn`svn info . | grep "^Revision"|cut -d " " -f 2`
 
 maketar: @GEOIP_TARGET@
-	\rm -rf lprobe_@PACKAGE_VERSION@_*
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)/packages
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)/utils
-	cp COPYING LICENSE EULA.txt lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)
-	cp python-config lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)
-	cp -rf *.c *.h third_party lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)
-	cp README *.in autogen.sh Makefile.am lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)
-	cp packages/*.spec.in lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)/packages
-	cp utils/*[ch] utils/Makefile.in lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)/utils
-	grep -v 'private/Makefile' configure.am | grep -v n2disk_version.h| sed -e 's/AC_CONFIG_FILES(\[plugins\/Makefile\])/echo ""/g' | sed -e 's/PLUGINS=plugins/PLUGINS=/g' > lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)/configure.am
-	\rm -f lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)/libtool
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE) -name "#*"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE) -name "*~"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE) -name "svn-commit*"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE) -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE) -type d -name ".svn"  -print | xargs /bin/rm -rf
-	tar cvfz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE).tgz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)
+	\rm -rf nprobe_@PACKAGE_VERSION@_*
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)/packages
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)/utils
+	cp COPYING LICENSE EULA.txt nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)
+	cp python-config nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)
+	cp -rf *.c *.h third_party nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)
+	cp README *.in autogen.sh Makefile.am nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)
+	cp packages/*.spec.in nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)/packages
+	cp utils/*[ch] utils/Makefile.in nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)/utils
+	grep -v 'private/Makefile' configure.am | grep -v n2disk_version.h| sed -e 's/AC_CONFIG_FILES(\[plugins\/Makefile\])/echo ""/g' | sed -e 's/PLUGINS=plugins/PLUGINS=/g' > nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)/configure.am
+	\rm -f nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)/libtool
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE) -name "#*"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE) -name "*~"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE) -name "svn-commit*"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE) -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE) -type d -name ".svn"  -print | xargs /bin/rm -rf
+	tar cvfz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE).tgz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)
 
 maketarproplugins: @GEOIP_TARGET@
-	\rm -rf lprobe_@PACKAGE_VERSION@_*_proplugins
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/plugins
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/bgp
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/packages
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/utils
-	cp COPYING LICENSE EULA.txt lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins
-	cp python-config lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins
-	cp packages/*.spec.in lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/packages
-	cp bgp/bgp_probe_client.pl bgp/README lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/bgp
-	cp -rf pro *.c *.h third_party lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins
-	cp utils/*[ch] utils/Makefile.in lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/utils
-	cp plugins/buildMakefile.sh lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/plugins
-	cp plugins/bgpPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/plugins
-	cp plugins/patricia.[ch] lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/plugins
-	cp plugins/dbPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/plugins
-	cp README *.in autogen.sh Makefile.am configure.am lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins
-	\rm -f lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/plugins/ltop*
-	grep -v 'private/Makefile' configure.am | grep -v n2disk_version.h> lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/configure.am
-	\rm -f lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/libtool
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins -type f -name "*.bak"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins -type f -name "#*"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins -type f -name "*~"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins -type d -name ".svn"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
-	tar cvfz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins.tgz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins
+	\rm -rf nprobe_@PACKAGE_VERSION@_*_proplugins
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/plugins
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/bgp
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/packages
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/utils
+	cp COPYING LICENSE EULA.txt nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins
+	cp python-config nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins
+	cp packages/*.spec.in nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/packages
+	cp bgp/bgp_probe_client.pl bgp/README nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/bgp
+	cp -rf pro *.c *.h third_party nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins
+	cp utils/*[ch] utils/Makefile.in nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/utils
+	cp plugins/buildMakefile.sh nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/plugins
+	cp plugins/bgpPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/plugins
+	cp plugins/patricia.[ch] nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/plugins
+	cp plugins/dbPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/plugins
+	cp README *.in autogen.sh Makefile.am configure.am nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins
+	\rm -f nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/plugins/ntop*
+	grep -v 'private/Makefile' configure.am | grep -v n2disk_version.h> nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/configure.am
+	\rm -f nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins/libtool
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins -type f -name "*.bak"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins -type f -name "#*"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins -type f -name "*~"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins -type d -name ".svn"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
+	tar cvfz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins.tgz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_proplugins
 
 maketarfranz: @GEOIP_TARGET@
-	\rm -rf lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/packages
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/utils
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/extensions
-	cp python-config lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz
-	cp utils/*[ch] utils/Makefile.in lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/utils
-	cp COPYING LICENSE EULA.txt lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz
-	cp packages/*.spec.in lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/packages
-	cp -rf pro *.c *.h third_party lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz
-	cp plugins/buildMakefile.sh lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
-	cp plugins/dbPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
-	cp plugins/ftpPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
-	cp plugins/httpPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
-	cp plugins/mysqlPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
-	cp plugins/dhcpPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
-	cp plugins/rtpPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
-	cp plugins/sipPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
-	cp plugins/smtpPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
-	cp plugins/popPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
-	cp plugins/imapPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
-	cp plugins/radiusPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
-	cp extensions/*.[ch] lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/extensions
-	cp README *.in autogen.sh Makefile.am configure.am lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz
-	\rm -f lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins/ltop*
-	grep -v 'private/Makefile' configure.am | grep -v n2disk_version.h > lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/configure.am
-	cp -r plugin_sdk lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/
-	\rm -f lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugin_sdk/Makefile
-	\rm -f lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/libtool
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz -type f -name "*.bak"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz -type f -name "#*"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz -type f -name "*~"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz -type d -name ".svn"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
-	cd lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz; svn co https://svn.ltop.org/svn/ltop/trunk/nDPI/; \find . -name ".svn"|xargs /bin/rm -rf {} ';'
-	tar cvfz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz.tgz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz
+	\rm -rf nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/packages
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/utils
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/extensions
+	cp python-config nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz
+	cp utils/*[ch] utils/Makefile.in nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/utils
+	cp COPYING LICENSE EULA.txt nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz
+	cp packages/*.spec.in nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/packages
+	cp -rf pro *.c *.h third_party nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz
+	cp plugins/buildMakefile.sh nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
+	cp plugins/dbPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
+	cp plugins/ftpPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
+	cp plugins/httpPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
+	cp plugins/mysqlPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
+	cp plugins/dhcpPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
+	cp plugins/rtpPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
+	cp plugins/sipPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
+	cp plugins/smtpPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
+	cp plugins/popPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
+	cp plugins/imapPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
+	cp plugins/radiusPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins
+	cp extensions/*.[ch] nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/extensions
+	cp README *.in autogen.sh Makefile.am configure.am nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz
+	\rm -f nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugins/ntop*
+	grep -v 'private/Makefile' configure.am | grep -v n2disk_version.h > nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/configure.am
+	cp -r plugin_sdk nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/
+	\rm -f nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/plugin_sdk/Makefile
+	\rm -f nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz/libtool
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz -type f -name "*.bak"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz -type f -name "#*"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz -type f -name "*~"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz -type d -name ".svn"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
+	cd nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz; svn co https://svn.ntop.org/svn/ntop/trunk/nDPI/; \find . -name ".svn"|xargs /bin/rm -rf {} ';'
+	tar cvfz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz.tgz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_franz
 
 maketarhomer: @GEOIP_TARGET@
-	\rm -rf lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/plugins
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/packages
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/utils
-	mkdir lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/extensions
-	cp python-config lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer
-	cp utils/*[ch] utils/Makefile.in lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/utils
-	cp COPYING LICENSE EULA.txt lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer
-	cp packages/*.spec.in lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/packages
-	cp -rf pro *.c *.h third_party lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer
-	cp plugins/buildMakefile.sh lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/plugins
-	cp plugins/homerRtpPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/plugins
-	cp plugins/homerSipPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/plugins
-	cp plugins/mos.[ch] lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/plugins
-	cp plugins/hep.h lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/plugins
-	cp extensions/*.[ch] lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/extensions
-	cp README *.in autogen.sh Makefile.am configure.am lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer
-	\rm -f lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/plugins/ltop*
-	grep -v 'private/Makefile' configure.am | grep -v n2disk_version.h > lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/configure.am
-	cp -r plugin_sdk lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/
-	\rm -f lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/plugin_sdk/Makefile
-	\rm -f lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/libtool
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer -type f -name "*.bak"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer -type f -name "#*"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer -type f -name "*~"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer -type d -name ".svn"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
-	cd lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer; svn co https://svn.ltop.org/svn/ltop/trunk/nDPI/; \find . -name ".svn"|xargs /bin/rm -rf {} ';'
-	tar cvfz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer.tgz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer
+	\rm -rf nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/plugins
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/packages
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/utils
+	mkdir nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/extensions
+	cp python-config nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer
+	cp utils/*[ch] utils/Makefile.in nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/utils
+	cp COPYING LICENSE EULA.txt nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer
+	cp packages/*.spec.in nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/packages
+	cp -rf pro *.c *.h third_party nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer
+	cp plugins/buildMakefile.sh nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/plugins
+	cp plugins/homerRtpPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/plugins
+	cp plugins/homerSipPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/plugins
+	cp plugins/mos.[ch] nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/plugins
+	cp plugins/hep.h nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/plugins
+	cp extensions/*.[ch] nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/extensions
+	cp README *.in autogen.sh Makefile.am configure.am nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer
+	\rm -f nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/plugins/ntop*
+	grep -v 'private/Makefile' configure.am | grep -v n2disk_version.h > nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/configure.am
+	cp -r plugin_sdk nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/
+	\rm -f nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/plugin_sdk/Makefile
+	\rm -f nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer/libtool
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer -type f -name "*.bak"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer -type f -name "#*"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer -type f -name "*~"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer -type d -name ".svn"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
+	cd nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer; svn co https://svn.ntop.org/svn/ntop/trunk/nDPI/; \find . -name ".svn"|xargs /bin/rm -rf {} ';'
+	tar cvfz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer.tgz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_homer
 
 maketarnflite:
-	\rm -rf lprobe_@PACKAGE_VERSION@_*_nflite
-	mkdir -p lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite/lprobe/plugins
-	mkdir -p lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite/PF_RING/NFLite/kernel
-	mkdir -p lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite/PF_RING/NFLite/userland
-	cp plugins/README.plugins plugins/nflitePlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite/lprobe/plugins
-#	cp private/PF_RING/NFLite/README private/PF_RING/NFLite/Makefile lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite/PF_RING/NFLite/
-#	cp private/PF_RING/NFLite/kernel/Makefile private/PF_RING/NFLite/kernel/nflite_plugin.[ch] lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite/PF_RING/NFLite/kernel
-#	cp private/PF_RING/NFLite/userland/nflite_dump.c private/PF_RING/NFLite/userland/Makefile lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite/PF_RING/NFLite/userland
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite -type f -name "*.bak"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite -type f -name "#*"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite -type f -name "*~"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite -type d -name ".svn"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
-	tar cvfz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite.tgz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite
+	\rm -rf nprobe_@PACKAGE_VERSION@_*_nflite
+	mkdir -p nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite/nProbe/plugins
+	mkdir -p nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite/PF_RING/NFLite/kernel
+	mkdir -p nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite/PF_RING/NFLite/userland
+	cp plugins/README.plugins plugins/nflitePlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite/nProbe/plugins
+#	cp private/PF_RING/NFLite/README private/PF_RING/NFLite/Makefile nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite/PF_RING/NFLite/
+#	cp private/PF_RING/NFLite/kernel/Makefile private/PF_RING/NFLite/kernel/nflite_plugin.[ch] nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite/PF_RING/NFLite/kernel
+#	cp private/PF_RING/NFLite/userland/nflite_dump.c private/PF_RING/NFLite/userland/Makefile nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite/PF_RING/NFLite/userland
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite -type f -name "*.bak"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite -type f -name "#*"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite -type f -name "*~"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite -type d -name ".svn"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
+	tar cvfz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite.tgz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_nflite
 
 maketardns:
-	\rm -rf lprobe_@PACKAGE_VERSION@_*_dns
-	mkdir -p lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns/lprobe/plugins
-	cp plugins/README.plugins plugins/dnsPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns/lprobe/plugins
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns -type f -name "*.bak"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns -type f -name "#*"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns -type f -name "*~"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns -type d -name ".svn"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
-	tar cvfz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns.tgz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns
+	\rm -rf nprobe_@PACKAGE_VERSION@_*_dns
+	mkdir -p nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns/nProbe/plugins
+	cp plugins/README.plugins plugins/dnsPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns/nProbe/plugins
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns -type f -name "*.bak"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns -type f -name "#*"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns -type f -name "*~"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns -type d -name ".svn"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
+	tar cvfz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns.tgz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_dns
 
 maketarhttp:
-	\rm -rf lprobe_@PACKAGE_VERSION@_*_http
-	mkdir -p lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http/lprobe/plugins
-	cp plugins/README.plugins plugins/httpPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http/lprobe/plugins
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http -type f -name "*.bak"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http -type f -name "#*"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http -type f -name "*~"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http -type d -name ".svn"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
-	tar cvfz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http.tgz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http
+	\rm -rf nprobe_@PACKAGE_VERSION@_*_http
+	mkdir -p nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http/nProbe/plugins
+	cp plugins/README.plugins plugins/httpPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http/nProbe/plugins
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http -type f -name "*.bak"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http -type f -name "#*"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http -type f -name "*~"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http -type d -name ".svn"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
+	tar cvfz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http.tgz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_http
 
 maketaremail:
-	\rm -rf lprobe_@PACKAGE_VERSION@_*_email
-	mkdir -p lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email/lprobe/plugins
-	cp plugins/README.plugins plugins/popPlugin.c plugins/smtpPlugin.c plugins/imapPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email/lprobe/plugins
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email -type f -name "*.bak"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email -type f -name "#*"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email -type f -name "*~"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email -type d -name ".svn"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
-	tar cvfz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email.tgz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email
+	\rm -rf nprobe_@PACKAGE_VERSION@_*_email
+	mkdir -p nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email/nProbe/plugins
+	cp plugins/README.plugins plugins/popPlugin.c plugins/smtpPlugin.c plugins/imapPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email/nProbe/plugins
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email -type f -name "*.bak"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email -type f -name "#*"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email -type f -name "*~"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email -type d -name ".svn"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
+	tar cvfz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email.tgz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_email
 
 maketarvoip:
-	\rm -rf lprobe_@PACKAGE_VERSION@_*_voip
-	mkdir -p lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip/lprobe/plugins
-	cp plugins/README.plugins plugins/sipPlugin.c plugins/rtpPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip/lprobe/plugins
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip -type f -name "*.bak"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip -type f -name "#*"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip -type f -name "*~"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip -type d -name ".svn"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
-	tar cvfz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip.tgz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip
+	\rm -rf nprobe_@PACKAGE_VERSION@_*_voip
+	mkdir -p nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip/nProbe/plugins
+	cp plugins/README.plugins plugins/sipPlugin.c plugins/rtpPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip/nProbe/plugins
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip -type f -name "*.bak"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip -type f -name "#*"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip -type f -name "*~"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip -type d -name ".svn"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
+	tar cvfz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip.tgz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_voip
 
 maketaroracle:
-	\rm -rf lprobe_@PACKAGE_VERSION@_*_oracle
-	mkdir -p lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle/lprobe/plugins
-	cp plugins/README.plugins plugins/oraclePlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle/lprobe/plugins
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle -type f -name "*.bak"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle -type f -name "#*"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle -type f -name "*~"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle -type d -name ".svn"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
-	tar cvfz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle.tgz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle
+	\rm -rf nprobe_@PACKAGE_VERSION@_*_oracle
+	mkdir -p nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle/nProbe/plugins
+	cp plugins/README.plugins plugins/oraclePlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle/nProbe/plugins
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle -type f -name "*.bak"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle -type f -name "#*"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle -type f -name "*~"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle -type d -name ".svn"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
+	tar cvfz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle.tgz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_oracle
 
 maketarmysql:
-	\rm -rf lprobe_@PACKAGE_VERSION@_*_mysql
-	mkdir -p lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql/lprobe/plugins
-	cp plugins/README.plugins plugins/mysqlPlugin.c lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql/lprobe/plugins
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql -type f -name "*.bak"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql -type f -name "#*"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql -type f -name "*~"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql -type d -name ".svn"  -print | xargs /bin/rm -rf
-	\find lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
-	tar cvfz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql.tgz ./lprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql
+	\rm -rf nprobe_@PACKAGE_VERSION@_*_mysql
+	mkdir -p nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql/nProbe/plugins
+	cp plugins/README.plugins plugins/mysqlPlugin.c nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql/nProbe/plugins
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql -type f -name "*.bak"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql -type f -name "#*"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql -type f -name "*~"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql -type d -name ".svn"  -print | xargs /bin/rm -rf
+	\find nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql -type f -name "*.dSYM"  -print | xargs /bin/rm -rf
+	tar cvfz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql.tgz ./nprobe_@PACKAGE_VERSION@_$(SVN_RELEASE)_mysql
 
 tar: maketar maketarproplugins maketarnflite maketarhttp maketardns maketaroracle maketarmysql maketaremail maketarvoip # maketarfranz
 
 binarytar:
-	\rm -rf lprobe_@PACKAGE_VERSION@-@PLATFORM@_$(SVN_RELEASE)
-	mkdir lprobe_@PACKAGE_VERSION@-@PLATFORM@_$(SVN_RELEASE) lprobe_@PACKAGE_VERSION@-@PLATFORM@_$(SVN_RELEASE)/plugins
-	cp .libs/lprobe .libs/liblprobe-@PACKAGE_VERSION@.so .libs/liblprobe.so lprobe_@PACKAGE_VERSION@-@PLATFORM@_$(SVN_RELEASE)
-	cp plugins/.libs/lib*Plugin-@PACKAGE_VERSION@.so lprobe_@PACKAGE_VERSION@-@PLATFORM@_$(SVN_RELEASE)/plugins
-	tar cvfz lprobe_@PACKAGE_VERSION@-@PLATFORM@_$(SVN_RELEASE).tgz lprobe_@PACKAGE_VERSION@-@PLATFORM@_$(SVN_RELEASE)
+	\rm -rf nprobe_@PACKAGE_VERSION@-@PLATFORM@_$(SVN_RELEASE)
+	mkdir nprobe_@PACKAGE_VERSION@-@PLATFORM@_$(SVN_RELEASE) nprobe_@PACKAGE_VERSION@-@PLATFORM@_$(SVN_RELEASE)/plugins
+	cp .libs/nprobe .libs/libnprobe-@PACKAGE_VERSION@.so .libs/libnprobe.so nprobe_@PACKAGE_VERSION@-@PLATFORM@_$(SVN_RELEASE)
+	cp plugins/.libs/lib*Plugin-@PACKAGE_VERSION@.so nprobe_@PACKAGE_VERSION@-@PLATFORM@_$(SVN_RELEASE)/plugins
+	tar cvfz nprobe_@PACKAGE_VERSION@-@PLATFORM@_$(SVN_RELEASE).tgz nprobe_@PACKAGE_VERSION@-@PLATFORM@_$(SVN_RELEASE)
 
 install: install-recursive	
 

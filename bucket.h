@@ -1,9 +1,9 @@
 /*
- *        lprobe - a Netflow v5/v9/IPFIX probe for IPv4/v6
+ *        nProbe - a Netflow v5/v9/IPFIX probe for IPv4/v6
  *
- *       Copyright (C) 2002-14 Luca Deri <deri@ltop.org>
+ *       Copyright (C) 2002-14 Luca Deri <deri@ntop.org>
  *
- *                     http://www.ltop.org/
+ *                     http://www.ntop.org/
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -46,10 +46,10 @@ typedef uint   u_int32_t;
 
 /* ********************************** */
 
-#define lprobe_FD_SET(n, p)   (*(p) |= (1 << (n)))
-#define lprobe_FD_CLR(n, p)   (*(p) &= ~(1 << (n)))
-#define lprobe_FD_ISSET(n, p) (*(p) & (1 << (n)))
-#define lprobe_FD_ZERO(p)     (*(p) = 0)
+#define NPROBE_FD_SET(n, p)   (*(p) |= (1 << (n)))
+#define NPROBE_FD_CLR(n, p)   (*(p) &= ~(1 << (n)))
+#define NPROBE_FD_ISSET(n, p) (*(p) & (1 << (n)))
+#define NPROBE_FD_ZERO(p)     (*(p) = 0)
 
 
 #define MAX_PAYLOAD_LEN          1400 /* bytes */
@@ -60,11 +60,11 @@ typedef uint   u_int32_t;
 #define FLAG_FRAGMENTED_PACKET_DST2SRC     4
 
 
-#define lprobe_UNKNOWN_VALUE              0
-#define lprobe_UNKNOWN_VALUE_STR          "0"
+#define NPROBE_UNKNOWN_VALUE              0
+#define NPROBE_UNKNOWN_VALUE_STR          "0"
 
-#define nwLatencyComputed(a)          (a && lprobe_FD_ISSET(FLAG_NW_LATENCY_COMPUTED,   &(a->flags)))
-#define applLatencyComputed(a)        (a && lprobe_FD_ISSET(FLAG_APPL_LATENCY_COMPUTED, &(a->flags)))
+#define nwLatencyComputed(a)          (a && NPROBE_FD_ISSET(FLAG_NW_LATENCY_COMPUTED,   &(a->flags)))
+#define applLatencyComputed(a)        (a && NPROBE_FD_ISSET(FLAG_APPL_LATENCY_COMPUTED, &(a->flags)))
 
 
 #ifdef WIN32
@@ -268,12 +268,12 @@ typedef struct {
   } ttlstats;
 
   /*
-    client <------------> lprobe <-------------------> server
+    client <------------> nprobe <-------------------> server
     |<- clientNwDelay ->|        |<- serverNwDelay --------->|
     |<----------- network delay/latency -------------------->|
   */
-  struct timeval clientNwDelay; /* The RTT between the client and lprobe */
-  struct timeval serverNwDelay; /* The RTT between lprobe and the server */
+  struct timeval clientNwDelay; /* The RTT between the client and nprobe */
+  struct timeval serverNwDelay; /* The RTT between nprobe and the server */
   struct timeval src2dstApplLatency, dst2srcApplLatency; /* Application Latency */
 } FlowHashBucketExtensions;
 

@@ -108,7 +108,7 @@
 /* Define to 1 if you have the `zmq' library (-lzmq). */
 #define HAVE_LIBZMQ 1
 
-/* Check lprobe license */
+/* Check nprobe license */
 #define HAVE_LICENSE 1
 
 /* Define to 1 if you have the <memory.h> header file. */
@@ -159,11 +159,11 @@
 /* Define to 1 if you have the <net/if.h> header file. */
 #define HAVE_NET_IF_H 1
 
-/* Time we compiled lprobe */
+/* Time we compiled nprobe */
 #define HAVE_NOW 1394119422
 
-/* lprobe extensions present */
-#define HAVE_lprobe_EXTENSIONS 1
+/* nProbe extensions present */
+#define HAVE_NPROBE_EXTENSIONS 1
 
 /* libc has optreset */
 #define HAVE_OPTRESET 1
@@ -174,7 +174,7 @@
 /* Native PF_RING support */
 /* #undef HAVE_PF_RING */
 
-/* Check lprobe plugin licenses */
+/* Check nprobe plugin licenses */
 #define HAVE_PLUGIN_LICENSE 1
 
 /* Define to 1 if you have the <pthread.h> header file. */
@@ -283,10 +283,10 @@
 /* #undef NEED_INET_ATON */
 
 /* build for big endian */
-/* #undef lprobe_BIG_ENDIAN */
+/* #undef NPROBE_BIG_ENDIAN */
 
 /* build for little endian */
-#define lprobe_LITTLE_ENDIAN 1
+#define NPROBE_LITTLE_ENDIAN 1
 
 /* Name of package */
 #define PACKAGE ""
@@ -295,13 +295,13 @@
 #define PACKAGE_BUGREPORT ""
 
 /* Define to the full name of this package. */
-#define PACKAGE_NAME "lprobe"
+#define PACKAGE_NAME "nprobe"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "lprobe 6.16.140306"
+#define PACKAGE_STRING "nprobe 6.16.140306"
 
 /* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "lprobe"
+#define PACKAGE_TARNAME "nprobe"
 
 /* Define to the home page for this package. */
 #define PACKAGE_URL ""
